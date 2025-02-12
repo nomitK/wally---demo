@@ -1,12 +1,9 @@
 let mediaRecorder;
 let audioChunks = [];
+const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
 
-const heartContainer = document.getElementById('heartContainer');
-
 window.onload = function() {
-    
-    
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function(stream) {
@@ -23,8 +20,6 @@ window.onload = function() {
             const silenceDurationThreshold = 5000; // 5 seconds threshold
             let soundDetected = false;
 
-
-            
             function startRecording() {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
@@ -60,17 +55,21 @@ window.onload = function() {
                 };
             }
 
-
             function detectSilence() {
                 analyser.getByteFrequencyData(dataArray);
                 const sum = dataArray.reduce((a, b) => a + b, 0);
                 const averageVolume = sum / dataArray.length;
 
+                // Check for silence
                 if (averageVolume < 10) { // Arbitrary silence threshold
                     if (!silenceStart) {
                         silenceStart = Date.now();
                         silenceTimeoutId = setTimeout(() => {
-                            mediaRecorder.stop();
+                            // Check if mediaRecorder is defined before stopping
+                            if (mediaRecorder && isRecording) {
+                                mediaRecorder.stop();
+                                console.log('Stopped due to silence');
+                            }
                         }, silenceDurationThreshold);
                     }
                 } else {
@@ -79,7 +78,6 @@ window.onload = function() {
 
                     if (!soundDetected) { // Start heart animation only on first detection
                         soundDetected = true;
-                        heartContainer.style.animationPlayState = 'running';
                         console.log('Sound detected, heart starts bumping!');
                     }
                 }
@@ -89,17 +87,15 @@ window.onload = function() {
 
             detectSilence();
 
-
-           // Set up the SpeechRecognition API
+            // Set up SpeechRecognition API
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition();
-                recognition.continuous = true; // Keep listening even after speaking
-                recognition.interimResults = true; // Support interim results for quicker feedback
+                recognition.continuous = true;
+                recognition.interimResults = true;
 
                 recognition.onresult = function(event) {
                     let transcript = '';
-
                     for (let i = event.resultIndex; i < event.results.length; i++) {
                         if (event.results[i].isFinal) {
                             transcript += event.results[i][0].transcript.trim() + ' ';
@@ -107,7 +103,7 @@ window.onload = function() {
                     }
 
                     if (transcript) {
-                        console.log('Recognized words:', transcript); // Log recognized words to console
+                        console.log('Recognized words:', transcript);
                     }
                 };
 
@@ -115,15 +111,8 @@ window.onload = function() {
                     console.error('Speech recognition error:', event.error);
                 };
 
-                recognition.start(); // Start the recognition
+                recognition.start();
             } else {
                 console.error('SpeechRecognition API is not supported in this browser.');
-            }            
-
-        }).catch(function(err) {
-            console.error('Error accessing microphone:', err);
-        });
-    } else {
-        console.error('getUserMedia not supported on your browser!');
-    }
+            }
 };
