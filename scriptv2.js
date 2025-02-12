@@ -5,48 +5,54 @@ window.onload = function() {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioContext.createMediaStreamSource(stream);
             const analyser = audioContext.createAnalyser();
-            analyser.fftSize = 512; // Set the FFT size for analyzing frequencies
+            analyser.fftSize = 256;
 
             source.connect(analyser);
 
             const dataArray = new Uint8Array(analyser.fftSize);
-            let mediaRecorder;
-            let isRecording = false;
+            let silenceStart = null;
+            let silenceTimeoutId;
+            const silenceDurationThreshold = 5000; // 5 seconds threshold
+            let mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+            console.log('Recording started');
 
-            function detectSound() {
+            mediaRecorder.ondataavailable = function(event) {
+                if (event.data.size > 0) {
+                    const audioChunks = [];
+                    audioChunks.push(event.data);
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    // Handle audio blob (e.g., upload or playback)
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                console.log('Recording stopped due to silence.');
+                // Additional actions after stop
+            };
+
+            function detectSilence() {
                 analyser.getByteFrequencyData(dataArray);
                 const sum = dataArray.reduce((a, b) => a + b, 0);
                 const averageVolume = sum / dataArray.length;
-
-                if (!isRecording && averageVolume > 30) { // Arbitrary threshold
-                    mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.start();
-                    isRecording = true;
-                    console.log('Recording started due to sound');
+                
+                if (averageVolume < 10) { // Arbitrary silence threshold
+                    if (!silenceStart) {
+                        silenceStart = Date.now();
+                        silenceTimeoutId = setTimeout(() => {
+                            mediaRecorder.stop();
+                        }, silenceDurationThreshold);
+                    }
+                } else {
+                    silenceStart = null;
+                    clearTimeout(silenceTimeoutId);
                 }
                 
-                if (isRecording) {
-                    mediaRecorder.ondataavailable = function(event) {
-                        if (event.data.size > 0) {
-                            const audioChunks = [];
-                            audioChunks.push(event.data);
-
-                            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                            // Handle audio blob (e.g., upload or playback)
-                        }
-                    };
-
-                    mediaRecorder.onstop = function() {
-                        console.log('Recording stopped');
-                        isRecording = false;
-                    };
-                }
-
-                requestAnimationFrame(detectSound); // Continuously run the detection loop
+                requestAnimationFrame(detectSilence);
             }
 
-            detectSound(); // Start detecting sound
-    
+            detectSilence();
+
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
         });
