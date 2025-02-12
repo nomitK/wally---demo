@@ -27,6 +27,7 @@ if (SpeechRecognition) {
                 audioChunks.push(event.data);
                 clearTimeout(silenceTimeout); // Limpa o timeout a cada dado disponível
                 silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Reinicia o timeout
+                alert("novo timeout defined");
         };
 
       mediaRecorder.onstop = () => {
