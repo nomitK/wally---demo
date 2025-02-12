@@ -1,5 +1,6 @@
 let mediaRecorder;
 let audioChunks = [];
+let silenceTimeout;
 
 // Verifique se a API SpeechRecognition está disponível
 //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
@@ -49,13 +50,24 @@ if (SpeechRecognition) {
         .catch(err => console.error('Erro ao acessar o microfone: ', err));
       }
 
+
+
+    function stopRecording() {
+        mediaRecorder.stop();
+        clearTimeout(silenceTimeout); // Limpa o tempo limite de silêncio
+        document.getElementById('stopButton').disabled = true;
+        heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
+    }
+  
     recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
     console.log(transcript); // Para depuração
 
     if (transcript.includes('inner')) {
-                    startRecording(); // Chama a função para iniciar a gravação se "pulsar" for detectada
-        }
+                    startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
+      } else if (transcript.includes('stop')) {
+            stopRecording(); // Para a gravação se "stop" for dita
+    }
     };
 
 
