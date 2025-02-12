@@ -32,19 +32,22 @@ if (SpeechRecognition) {
                 clearTimeout(silenceTimeout); // Limpa o timeout ao receber dados
                 clearInterval(silenceInterval); // Limpa o contador de silêncio
 
-                // Reinicia o timeout de silêncio e esconde o contador
-                silenceCount = 0; // Reseta o contador
-                countDisplay.textContent = silenceCount;
+                // Oculta o contador quando dados são recebidos
                 silenceCounterDisplay.style.display = 'none';
-                silenceTimeout = setTimeout(() => { 
-                    silenceInterval = setInterval(() => { 
-                        silenceCount++;
-                        countDisplay.textContent = silenceCount; // Atualiza o contador na tela
-                        silenceCounterDisplay.style.display = 'block'; // Mostra o contador
-                    }, 1000); 
-                    stopRecording(); // Chama stopRecording após 3 segundos de silêncio
-                }, SILENCE_THRESHOLD);
-        };
+
+                    // Reiniciar o timer de silêncio
+                    silenceTimeout = setTimeout(() => {
+                        // Exibe o contador de silêncio após 10 segundos sem dados
+                        silenceCounterDisplay.style.display = 'block';
+                        silenceCount = 0; // Reset do contador
+                        countDisplay.textContent = silenceCount; // Reseta o display
+                        silenceInterval = setInterval(() => {
+                            silenceCount++;
+                            countDisplay.textContent = silenceCount; // Atualiza o contador na tela
+                        }, 1000); // Incrementa a cada segundo
+                        stopRecording(); // Chama a gravação após 10 segundos de silêncio
+                    }, SILENCE_THRESHOLD);
+                };
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
