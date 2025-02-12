@@ -1,4 +1,5 @@
 let mediaRecorder;
+
 let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
