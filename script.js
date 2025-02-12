@@ -28,12 +28,22 @@ if (SpeechRecognition) {
         mediaRecorder = new MediaRecorder(stream);
         
         mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-                    clearTimeout(silenceTimeout); // Limpa o timeout ao receber dados
-                    clearInterval(silenceInterval); // Limpa o contador de silêncio
-                    silenceCounterDisplay.style.display = 'none'; // Oculta o contador
+                audioChunks.push(event.data); // Armazena os dados de áudio
+                clearTimeout(silenceTimeout); // Limpa o timeout ao receber dados
+                clearInterval(silenceInterval); // Limpa o contador de silêncio
 
-         silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Para a gravação após 10 segundos 
+                // Reinicia o timeout de silêncio e esconde o contador
+                silenceCount = 0; // Reseta o contador
+                countDisplay.textContent = silenceCount;
+                silenceCounterDisplay.style.display = 'none';
+                silenceTimeout = setTimeout(() => { 
+                    silenceInterval = setInterval(() => { 
+                        silenceCount++;
+                        countDisplay.textContent = silenceCount; // Atualiza o contador na tela
+                        silenceCounterDisplay.style.display = 'block'; // Mostra o contador
+                    }, 1000); 
+                    stopRecording(); // Chama stopRecording após 3 segundos de silêncio
+                }, SILENCE_THRESHOLD);
         };
 
       mediaRecorder.onstop = () => {
