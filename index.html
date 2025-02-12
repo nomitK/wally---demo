@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gravar Voz</title>
+    <title>Gravar Voz com Coração Pulsante</title>
     <style>
         body {
             margin: 0; 
@@ -26,6 +26,21 @@
             padding: 10px;
             text-align: center; 
         }
+        .heartbeat {
+            display: inline-block;
+            animation: heartbeat 1.5s infinite paused; /* Animação inicialmente pausada */
+        }
+        @keyframes heartbeat {
+            0%, 20% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1); /* Aumenta o tamanho do coração */
+            }
+            100% {
+                transform: scale(1); /* Retorna ao tamanho normal */
+            }
+        }
     </style>
 </head>
 <body>
@@ -36,9 +51,11 @@
 
     <main>
         <h2>Controle de Gravação</h2>
-        <button id="startButton">Iniciar Gravação</button>
         <button id="stopButton" disabled>Parar Gravação</button>
         <br><br>
+        <div class="heartbeat" id="heartContainer">
+            <img src="https://images.hindustantimes.com/img/2022/01/27/550x309/healthy-gdae63cff2_1280_1643268445755_1643268464696.png" alt="Coração ECG" width="200" height="200"/>
+        </div>
         <audio id="audioPlayback" controls style="display: none;"></audio>
         <a id="downloadLink" style="display: none;">Baixar Gravação</a>
     </main>
@@ -51,40 +68,60 @@
         let mediaRecorder;
         let audioChunks = [];
 
-        document.getElementById('startButton').onclick = async function() {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
+        // Verifique se a API SpeechRecognition está disponível
+        const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
 
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.interimResults = true; 
+
+            const heartContainer = document.getElementById('heartContainer');
+
+            // Função para começar a gravação
+            function startRecording() {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+
+                        mediaRecorder.ondataavailable = event => {
+                            audioChunks.push(event.data);
+                        };
+
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            document.getElementById('audioPlayback').src = audioUrl;
+                            document.getElementById('audioPlayback').style.display = 'block';
+
+                            // Criar um link para download
+                            const downloadLink = document.getElementById('downloadLink');
+                            downloadLink.href = audioUrl;
+                            downloadLink.download = 'gravacao.wav';
+                            downloadLink.innerText = 'Baixar Gravação';
+                            downloadLink.style.display = 'block';
+
+                            audioChunks = []; // Limpar os chunks após a gravação
+                            heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
+                        };
+
+                        mediaRecorder.start();
+                        document.getElementById('stopButton').disabled = false;
+                        heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
+                    })
+                    .catch(err => console.error('Erro ao acessar o microfone: ', err));
+            }
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                console.log(transcript); // Para depuração
+
+                if (transcript.includes('pulsar')) {
+                    startRecording(); // Chama a função para iniciar a gravação se "pulsar" for detectada
+                }
             };
 
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                document.getElementById('audioPlayback').src = audioUrl;
-                document.getElementById('audioPlayback').style.display = 'block';
-
-                // Criar um link para download
-                const downloadLink = document.getElementById('downloadLink');
-                downloadLink.href = audioUrl;
-                downloadLink.download = 'gravacao.wav';
-                downloadLink.innerText = 'Baixar Gravação';
-                downloadLink.style.display = 'block';
-
-                audioChunks = []; // Limpar os chunks após a gravação
-            };
-
-            mediaRecorder.start();
-            document.getElementById('startButton').disabled = true;
-            document.getElementById('stopButton').disabled = false;
-        };
-
-        document.getElementById('stopButton').onclick = () => {
-            mediaRecorder.stop();
-            document.getElementById('startButton').disabled = false;
-            document.getElementById('stopButton').disabled = true;
-        };
+            recognition.onerror = (event) => {
+                console.error('Erro de reconhecimento: ', event.error);
     </script>
 
 </body>
