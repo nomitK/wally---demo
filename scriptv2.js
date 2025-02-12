@@ -1,5 +1,6 @@
 let mediaRecorder;
 let audioChunks = [];
+let isRecording = false;
 
 const heartContainer = document.getElementById('heartContainer');
 
@@ -20,43 +21,51 @@ window.onload = function() {
             let silenceStart = null;
             let silenceTimeoutId;
             const silenceDurationThreshold = 5000; // 5 seconds threshold
-            let mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-            console.log('Recording started');
-            heartContainer.style.animationPlayState = 'running'; // Start heart animation
+            let soundDetected = false;
 
-            mediaRecorder.ondataavailable = function(event) {
-                if (event.data.size > 0) {
-                    audioChunks.push(event.data);
-                    
-                }
-            };
 
-            mediaRecorder.onstop = function() {
-                console.log('Recording stopped due to silence.');
-                // Create a blob from the audio chunks
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                const audioUrl = URL.createObjectURL(audioBlob);
+            
+            function startRecording() {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                console.log('Recording started');
+                heartContainer.style.animationPlayState = 'running'; // Start heart animation
+                isRecording = true;
 
-                // Create a new audio element to play back the recording
-                const audioElement = new Audio(audioUrl);
-                audioElement.play(); // Play the recorded audio
+                // Clear previous audio chunks
+                audioChunks = [];
 
-                // Optionally, create a download link
-                const downloadLink = document.createElement('a');
-                downloadLink.href = audioUrl;
-                downloadLink.download = 'recorded_audio.webm';
-                downloadLink.textContent = 'Download recorded audio';
-                document.body.appendChild(downloadLink);                
-                heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
-                // Additional actions after stop
-            };
+                mediaRecorder.ondataavailable = function(event) {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data); // Collect the audio data
+                    }
+                };
+
+                mediaRecorder.onstop = function() {
+                    console.log('Recording stopped due to silence.');
+                    heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
+                    isRecording = false;
+
+                    // Process the recorded audio
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioElement = new Audio(audioUrl);
+                    audioElement.play();
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = audioUrl;
+                    downloadLink.download = 'recorded_audio.webm';
+                    downloadLink.textContent = 'Download recorded audio';
+                    document.body.appendChild(downloadLink);
+                };
+            }
+
 
             function detectSilence() {
                 analyser.getByteFrequencyData(dataArray);
                 const sum = dataArray.reduce((a, b) => a + b, 0);
                 const averageVolume = sum / dataArray.length;
-                
+
                 if (averageVolume < 10) { // Arbitrary silence threshold
                     if (!silenceStart) {
                         silenceStart = Date.now();
@@ -67,7 +76,18 @@ window.onload = function() {
                 } else {
                     silenceStart = null;
                     clearTimeout(silenceTimeoutId);
+
+                    if (!soundDetected) { // Start heart animation only on first detection
+                        soundDetected = true;
+                        heartContainer.style.animationPlayState = 'running';
+                        console.log('Sound detected, heart starts bumping!');
+                    }
                 }
+
+                requestAnimationFrame(detectSilence);
+            }
+
+            detectSilence();
                 
                 requestAnimationFrame(detectSilence);
             }
