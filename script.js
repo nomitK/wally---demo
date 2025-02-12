@@ -1,11 +1,7 @@
 let mediaRecorder;
 let audioChunks = [];
-let silenceTimeout;
-let silenceInterval;
-const SILENCE_THRESHOLD = 10000; // 10 segundos
 
-const silenceCounterDisplay = document.getElementById('silenceCounter');
-const countDisplay = document.getElementById('count');
+
 
 // Verifique se a API SpeechRecognition está disponível
 //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
@@ -29,24 +25,6 @@ if (SpeechRecognition) {
         
         mediaRecorder.ondataavailable = event => {
                 audioChunks.push(event.data); // Armazena os dados de áudio
-                clearTimeout(silenceTimeout); // Limpa o timeout ao receber dados
-                clearInterval(silenceInterval); // Limpa o contador de silêncio
-
-                // Oculta o contador quando dados são recebidos
-                silenceCounterDisplay.style.display = 'none';
-
-                    // Reiniciar o timer de silêncio
-                    silenceTimeout = setTimeout(() => {
-                        // Exibe o contador de silêncio após 10 segundos sem dados
-                        silenceCounterDisplay.style.display = 'block';
-                        silenceCount = 0; // Reset do contador
-                        countDisplay.textContent = silenceCount; // Reseta o display
-                        silenceInterval = setInterval(() => {
-                            silenceCount++;
-                            countDisplay.textContent = silenceCount; // Atualiza o contador na tela
-                        }, 1000); // Incrementa a cada segundo
-                        stopRecording(); // Chama a gravação após 10 segundos de silêncio
-                    }, SILENCE_THRESHOLD);
                 };
 
       mediaRecorder.onstop = () => {
@@ -84,9 +62,6 @@ if (SpeechRecognition) {
 
     function stopRecording() {
         mediaRecorder.stop();
-        clearTimeout(silenceTimeout); // Limpa o tempo limite de silêncio
-        clearInterval(silenceInterval); // Para o incremento do contador
-        silenceCounterDisplay.style.display = 'none'; // Oculta o contador
         document.getElementById('stopButton').disabled = true;
         heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
     }
@@ -100,7 +75,7 @@ if (SpeechRecognition) {
 
     if (transcript.includes('inner')) {
                     startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
-      } else if (transcript.includes('stop')) {
+      } else if (transcript.includes('stop')) or event.error = "no-speech" {
             stopRecording(); // Para a gravação se "stop" for dita
     }
     };
