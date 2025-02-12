@@ -52,6 +52,9 @@ window.onload = function() {
                     downloadLink.download = 'recorded_audio.webm';
                     downloadLink.textContent = 'Download recorded audio';
                     document.body.appendChild(downloadLink);
+
+                    // Start a new recording automatically
+                    startRecording();
                 };
             }
 
@@ -65,7 +68,7 @@ window.onload = function() {
                     if (!silenceStart) {
                         silenceStart = Date.now();
                         silenceTimeoutId = setTimeout(() => {
-                            // Check if mediaRecorder is defined before stopping
+                            // Stop the recording if silence persists
                             if (mediaRecorder && isRecording) {
                                 mediaRecorder.stop();
                                 console.log('Stopped due to silence');
@@ -115,4 +118,14 @@ window.onload = function() {
             } else {
                 console.error('SpeechRecognition API is not supported in this browser.');
             }
+
+            // Start the first recording
+            startRecording();
+
+        }).catch(function(err) {
+            console.error('Error accessing microphone:', err);
+        });
+    } else {
+        console.error('getUserMedia not supported on your browser!');
+    }
 };
