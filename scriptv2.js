@@ -88,11 +88,7 @@ window.onload = function() {
             }
 
             detectSilence();
-                
-                requestAnimationFrame(detectSilence);
-            }
 
-            detectSilence();
 
            // Set up the SpeechRecognition API
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
