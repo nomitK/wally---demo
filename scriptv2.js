@@ -1,6 +1,8 @@
 const heartContainer = document.getElementById('heartContainer');
 
 window.onload = function() {
+    
+    
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function(stream) {
@@ -18,13 +20,13 @@ window.onload = function() {
             let mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
             console.log('Recording started');
+            heartContainer.style.animationPlayState = 'running'; // Start heart animation
 
             mediaRecorder.ondataavailable = function(event) {
                 if (event.data.size > 0) {
                     const audioChunks = [];
                     audioChunks.push(event.data);
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
                     // Handle audio blob (e.g., upload or playback)
                 }
             };
@@ -56,6 +58,36 @@ window.onload = function() {
             }
 
             detectSilence();
+
+           // Set up the SpeechRecognition API
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = true; // Keep listening even after speaking
+                recognition.interimResults = true; // Support interim results for quicker feedback
+
+                recognition.onresult = function(event) {
+                    let transcript = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            transcript += event.results[i][0].transcript.trim() + ' ';
+                        }
+                    }
+
+                    if (transcript) {
+                        console.log('Recognized words:', transcript); // Log recognized words to console
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                };
+
+                recognition.start(); // Start the recognition
+            } else {
+                console.error('SpeechRecognition API is not supported in this browser.');
+            }            
 
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
