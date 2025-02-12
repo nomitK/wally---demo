@@ -1,6 +1,6 @@
 let mediaRecorder;
 let audioChunks = [];
-let errorMessage = "";
+
 
 
 // Verifique se a API SpeechRecognition está disponível
@@ -48,12 +48,6 @@ if (SpeechRecognition) {
         document.getElementById('stopButton').disabled = false;
         heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
 
-
-                // Contador de silêncio
-                silenceInterval = setInterval(() => {
-                    countDisplay.textContent = parseInt(countDisplay.textContent) + 1; // Incrementa o contador
-                    silenceCounterDisplay.style.display = 'block'; // Mostra o contador
-                }, 1000); // Incrementa a cada segundo
             })
         .catch(err => console.error('Erro ao acessar o microfone: ', err));
       }
@@ -67,7 +61,9 @@ if (SpeechRecognition) {
     }
 
 
-
+    function startSilenceTimer() {
+        timeout = setTimeout(stopRecording, 5000);
+    }
   
     recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
@@ -75,7 +71,6 @@ if (SpeechRecognition) {
 
 
    recognition.onerror = (event) => {
-      errorMessage = event.error; 
       console.error('Erro de reconhecimento: ', event.error);
     };
 
@@ -85,7 +80,7 @@ if (SpeechRecognition) {
 
     if (transcript.includes('inner')) {
                     startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
-      } else if (transcript.includes('stop') || errorMessage === "no-speech") {
+      } else if (transcript.includes('stop')) {
             stopRecording(); // Para a gravação se "stop" for dita
     }
     };      
