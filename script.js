@@ -73,21 +73,22 @@ if (SpeechRecognition) {
     const transcript = event.results[0][0].transcript.toLowerCase();
     console.log(transcript); // Para depuração
 
-    if (transcript.includes('inner')) {
-                    startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
-      } else if (transcript.includes('stop')) or event.error = "no-speech" {
-            stopRecording(); // Para a gravação se "stop" for dita
-    }
-    };
-
 
    recognition.onerror = (event) => {
+      const errorMessage = event.error; 
       console.error('Erro de reconhecimento: ', event.error);
     };
 
     recognition.onend = () => {
       recognition.start(); // Reinicia o reconhecimento após terminar
     };
+
+    if (transcript.includes('inner')) {
+                    startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
+      } else if (transcript.includes('stop')) or errorMessage = "no-speech" {
+            stopRecording(); // Para a gravação se "stop" for dita
+    }
+    };      
 
   recognition.start(); // Inicia o reconhecimento quando a página carrega
 
