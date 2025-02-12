@@ -1,6 +1,6 @@
 let mediaRecorder;
 let audioChunks = [];
-
+let errorMessage = "";
 
 
 // Verifique se a API SpeechRecognition está disponível
