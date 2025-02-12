@@ -1,7 +1,7 @@
 let mediaRecorder;
 let audioChunks = [];
 let silenceTimeout;
-const SILENCE_THRESHOLD = 5000; // 3 segundos
+const SILENCE_THRESHOLD = 10000; // 3 segundos
 
 // Verifique se a API SpeechRecognition está disponível
 //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
@@ -61,6 +61,7 @@ if (SpeechRecognition) {
                         audioChunks.push(event.data);
                         clearTimeout(silenceTimeout); // Limpa o timeout a cada dado disponível
                         silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Reinicia o timeout
+                       alert(silenceTimeout);
                     };
                 };
             })
