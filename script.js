@@ -1,6 +1,5 @@
 let mediaRecorder;
 let audioChunks = [];
-let timeout;
 
 
 
@@ -49,6 +48,12 @@ if (SpeechRecognition) {
         document.getElementById('stopButton').disabled = false;
         heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
 
+
+                // Contador de silêncio
+                silenceInterval = setInterval(() => {
+                    countDisplay.textContent = parseInt(countDisplay.textContent) + 1; // Incrementa o contador
+                    silenceCounterDisplay.style.display = 'block'; // Mostra o contador
+                }, 1000); // Incrementa a cada segundo
             })
         .catch(err => console.error('Erro ao acessar o microfone: ', err));
       }
@@ -56,16 +61,24 @@ if (SpeechRecognition) {
 
 
     function stopRecording() {
-        console.log('Recording is stopping.');
         mediaRecorder.stop();
         document.getElementById('stopButton').disabled = true;
         heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
     }
 
+
+
   
     recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
     console.log(transcript); // Para depuração
+
+    if (transcript.includes('inner')) {
+                    startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
+      } else if (transcript.includes('stop'))  {
+            stopRecording(); // Para a gravação se "stop" for dita
+    }
+    };
 
 
    recognition.onerror = (event) => {
@@ -75,13 +88,6 @@ if (SpeechRecognition) {
     recognition.onend = () => {
       recognition.start(); // Reinicia o reconhecimento após terminar
     };
-
-    if (transcript.includes('inner')) {
-                    startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
-      } else if (transcript.includes('stop')) {
-            stopRecording(); // Para a gravação se "stop" for dita
-    }
-    };      
 
   recognition.start(); // Inicia o reconhecimento quando a página carrega
 
