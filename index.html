@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravar Voz</title>
+    <style>
+        body {
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+        }
+        header {
+            background-color: #4CAF50; 
+            padding: 20px;
+            color: white; 
+            text-align: center;
+        }
+        main {
+            background-color: black; 
+            color: white; 
+            padding: 20px;
+            text-align: center;
+        }
+        footer {
+            background-color: gold; 
+            padding: 10px;
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gravar e Salvar Sua Voz</h1>
+    </header>
+
+    <main>
+        <h2>Controle de Gravação</h2>
+        <button id="startButton">Iniciar Gravação</button>
+        <button id="stopButton" disabled>Parar Gravação</button>
+        <br><br>
+        <audio id="audioPlayback" controls style="display: none;"></audio>
+        <a id="downloadLink" style="display: none;">Baixar Gravação</a>
+    </main>
+
+    <footer>
+        <p>© 2025 Minha Página Web</p>
+    </footer>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById('startButton').onclick = async function() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audioPlayback').src = audioUrl;
+                document.getElementById('audioPlayback').style.display = 'block';
+
+                // Criar um link para download
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = audioUrl;
+                downloadLink.download = 'gravacao.wav';
+                downloadLink.innerText = 'Baixar Gravação';
+                downloadLink.style.display = 'block';
+
+                audioChunks = []; // Limpar os chunks após a gravação
+            };
+
+            mediaRecorder.start();
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
+        };
+
+        document.getElementById('stopButton').onclick = () => {
+            mediaRecorder.stop();
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
+        };
+    </script>
+
+</body>
+</html>
