@@ -62,11 +62,6 @@ if (SpeechRecognition) {
         heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
     }
 
-
-    function startSilenceTimer() {
-      if (timeout) clearTimeout(timeout); // Clear any previous timeout
-      timeout = setTimeout(stopRecording, 5000); // Start a new timeout
-    }
   
     recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript.toLowerCase();
