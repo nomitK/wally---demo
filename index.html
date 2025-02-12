@@ -72,8 +72,11 @@
 
         // Verifique se a API SpeechRecognition está disponível
         //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
+        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+        var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
+        var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
-        if (1>0) {
+        if (!SpeechRecognition) {
             alert("Desculpe, esta funcionalidade de reconhecimento de voz não é suportada pelo seu navegador. Por favor, use o Google Chrome ou Microsoft Edge.");
             } else {
             alert("Funciona");
