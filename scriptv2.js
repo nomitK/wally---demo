@@ -1,3 +1,5 @@
+const heartContainer = document.getElementById('heartContainer');
+
 window.onload = function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
@@ -22,12 +24,14 @@ window.onload = function() {
                     const audioChunks = [];
                     audioChunks.push(event.data);
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
                     // Handle audio blob (e.g., upload or playback)
                 }
             };
 
             mediaRecorder.onstop = function() {
                 console.log('Recording stopped due to silence.');
+                heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
                 // Additional actions after stop
             };
 
