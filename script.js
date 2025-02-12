@@ -85,7 +85,7 @@ if (SpeechRecognition) {
 
     if (transcript.includes('inner')) {
                     startRecording(); // Chama a função para iniciar a gravação se "inner" for detectada
-      } else if (transcript.includes('stop')) or errorMessage = "no-speech" {
+      } else if (transcript.includes('stop') || errorMessage === "no-speech") {
             stopRecording(); // Para a gravação se "stop" for dita
     }
     };      
