@@ -75,7 +75,7 @@ if (SpeechRecognition) {
 
 
    recognition.onerror = (event) => {
-      const errorMessage = event.error; 
+      errorMessage = event.error; 
       console.error('Erro de reconhecimento: ', event.error);
     };
 
