@@ -1,3 +1,6 @@
+let mediaRecorder;
+let audioChunks = [];
+
 const heartContainer = document.getElementById('heartContainer');
 
 window.onload = function() {
@@ -24,15 +27,27 @@ window.onload = function() {
 
             mediaRecorder.ondataavailable = function(event) {
                 if (event.data.size > 0) {
-                    const audioChunks = [];
                     audioChunks.push(event.data);
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    // Handle audio blob (e.g., upload or playback)
+                    
                 }
             };
 
             mediaRecorder.onstop = function() {
                 console.log('Recording stopped due to silence.');
+                // Create a blob from the audio chunks
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Create a new audio element to play back the recording
+                const audioElement = new Audio(audioUrl);
+                audioElement.play(); // Play the recorded audio
+
+                // Optionally, create a download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = audioUrl;
+                downloadLink.download = 'recorded_audio.webm';
+                downloadLink.textContent = 'Download recorded audio';
+                document.body.appendChild(downloadLink);                
                 heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
                 // Additional actions after stop
             };
