@@ -1,7 +1,11 @@
 let mediaRecorder;
 let audioChunks = [];
 let silenceTimeout;
-const SILENCE_THRESHOLD = 10000; // 3 segundos
+let silenceInterval;
+const SILENCE_THRESHOLD = 10000; // 10 segundos
+
+const silenceCounterDisplay = document.getElementById('silenceCounter');
+const countDisplay = document.getElementById('count');
 
 // Verifique se a API SpeechRecognition está disponível
 //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
@@ -25,9 +29,11 @@ if (SpeechRecognition) {
         
         mediaRecorder.ondataavailable = event => {
                 audioChunks.push(event.data);
-                clearTimeout(silenceTimeout); // Limpa o timeout a cada dado disponível
-                silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Reinicia o timeout
-                alert("novo timeout defined");
+                    clearTimeout(silenceTimeout); // Limpa o timeout ao receber dados
+                    clearInterval(silenceInterval); // Limpa o contador de silêncio
+                    silenceCounterDisplay.style.display = 'none'; // Oculta o contador
+
+         silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Para a gravação após 10 segundos 
         };
 
       mediaRecorder.onstop = () => {
@@ -52,18 +58,11 @@ if (SpeechRecognition) {
         heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
 
 
-                // Reiniciar o timeout de silêncio sempre que há dados
-                silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Inicia o timeout de silêncio
-
-                mediaRecorder.onstart = () => {
-                    // Reinicia o timeout a cada fragmento de áudio recebido
-                    mediaRecorder.ondataavailable = (event) => {
-                        audioChunks.push(event.data);
-                        clearTimeout(silenceTimeout); // Limpa o timeout a cada dado disponível
-                        silenceTimeout = setTimeout(stopRecording, SILENCE_THRESHOLD); // Reinicia o timeout
-                       alert(silenceTimeout);
-                    };
-                };
+                // Contador de silêncio
+                silenceInterval = setInterval(() => {
+                    countDisplay.textContent = parseInt(countDisplay.textContent) + 1; // Incrementa o contador
+                    silenceCounterDisplay.style.display = 'block'; // Mostra o contador
+                }, 1000); // Incrementa a cada segundo
             })
         .catch(err => console.error('Erro ao acessar o microfone: ', err));
       }
@@ -73,6 +72,8 @@ if (SpeechRecognition) {
     function stopRecording() {
         mediaRecorder.stop();
         clearTimeout(silenceTimeout); // Limpa o tempo limite de silêncio
+        clearInterval(silenceInterval); // Para o incremento do contador
+        silenceCounterDisplay.style.display = 'none'; // Oculta o contador
         document.getElementById('stopButton').disabled = true;
         heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
     }
