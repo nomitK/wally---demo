@@ -27,18 +27,18 @@ if (SpeechRecognition) {
                 audioChunks.push(event.data); // Armazena os dados de áudio
                 };
 
-      mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
-        document.getElementById('audioPlayback').src = audioUrl;
-        document.getElementById('audioPlayback').style.display = 'block';
+        // document.getElementById('audioPlayback').src = audioUrl;
+        // document.getElementById('audioPlayback').style.display = 'block';
 
          // Criar um link para download
-        const downloadLink = document.getElementById('downloadLink');
-        downloadLink.href = audioUrl;
-        downloadLink.download = 'gravacao.wav';
-        downloadLink.innerText = 'Baixar Gravação';
-        downloadLink.style.display = 'block';
+        // const downloadLink = document.getElementById('downloadLink');
+        // downloadLink.href = audioUrl;
+        // downloadLink.download = 'gravacao.wav';
+        // downloadLink.innerText = 'Baixar Gravação';
+        // downloadLink.style.display = 'block';
 
         audioChunks = []; // Limpar os chunks após a gravação
         heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
@@ -48,12 +48,6 @@ if (SpeechRecognition) {
         document.getElementById('stopButton').disabled = false;
         heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
 
-
-                // Contador de silêncio
-                silenceInterval = setInterval(() => {
-                    countDisplay.textContent = parseInt(countDisplay.textContent) + 1; // Incrementa o contador
-                    silenceCounterDisplay.style.display = 'block'; // Mostra o contador
-                }, 1000); // Incrementa a cada segundo
             })
         .catch(err => console.error('Erro ao acessar o microfone: ', err));
       }
