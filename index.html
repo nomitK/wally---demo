@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
     <title>Gravar Voz com Coração Pulsante</title>
     <link rel="icon" type="image/png" href="favicon.ico"> <!-- Link to your favicon -->
     <style>
@@ -55,7 +57,8 @@
         <button id="stopButton" disabled>Parar Gravação ?</button>
         <br><br>
         <div class="heartbeat" id="heartContainer">
-            <img src="https://images.hindustantimes.com/img/2022/01/27/550x309/healthy-gdae63cff2_1280_1643268445755_1643268464696.png" alt="Coração ECG" width="200" height="200"/>
+            /* <img src="https://images.hindustantimes.com/img/2022/01/27/550x309/healthy-gdae63cff2_1280_1643268445755_1643268464696.png" alt="Coração ECG" width="200" height="200"/> */
+            <img src="img/.png" alt="Coração ECG" width="200" height="200"/>
         </div>
         <audio id="audioPlayback" controls style="display: none;"></audio>
         <a id="downloadLink" style="display: none;">Baixar Gravação ?</a>
@@ -63,87 +66,11 @@
     </main>
 
     <footer>
-        <p>© 2025 Minha Página Web</p>
+        <p>© 2025 Be-Healthy.ai Demo</p>
     </footer>
-
-    <script>
-        let mediaRecorder;
-        let audioChunks = [];
-
-        // Verifique se a API SpeechRecognition está disponível
-        //const SpeechRecognition = window.SpeechRecognition || window.webkit.SpeechRecognition;
-        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-        var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
-        var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
-
-
-        if (SpeechRecognition) {
-            statusMessage.innerText = "SpeechRecognition está disponível. Você pode usar comandos de voz."; // Mensagem de sucesso
-            var recognition = new SpeechRecognition();
-            recognition.interimResults = true; 
-
-            const heartContainer = document.getElementById('heartContainer');
-
-            // Função para começar a gravação
-            function startRecording() {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(stream => {
-                        mediaRecorder = new MediaRecorder(stream);
-
-                        mediaRecorder.ondataavailable = event => {
-                            audioChunks.push(event.data);
-                        };
-
-                        mediaRecorder.onstop = () => {
-                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                            const audioUrl = URL.createObjectURL(audioBlob);
-                            document.getElementById('audioPlayback').src = audioUrl;
-                            document.getElementById('audioPlayback').style.display = 'block';
-
-                            // Criar um link para download
-                            const downloadLink = document.getElementById('downloadLink');
-                            downloadLink.href = audioUrl;
-                            downloadLink.download = 'gravacao.wav';
-                            downloadLink.innerText = 'Baixar Gravação';
-                            downloadLink.style.display = 'block';
-
-                            audioChunks = []; // Limpar os chunks após a gravação
-                            heartContainer.style.animationPlayState = 'paused'; // Para a animação do coração
-                        };
-
-                        mediaRecorder.start();
-                        document.getElementById('stopButton').disabled = false;
-                        heartContainer.style.animationPlayState = 'running'; // Inicia a animação do coração
-                    })
-                    .catch(err => console.error('Erro ao acessar o microfone: ', err));
-            }
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                console.log(transcript); // Para depuração
-
-                if (transcript.includes('inner')) {
-                    startRecording(); // Chama a função para iniciar a gravação se "pulsar" for detectada
-                }
-            };
-
-
-            recognition.onerror = (event) => {
-                console.error('Erro de reconhecimento: ', event.error);
-            };
-
-            recognition.onend = () => {
-                recognition.start(); // Reinicia o reconhecimento após terminar
-            };
-
-            recognition.start(); // Inicia o reconhecimento quando a página carrega
-
-        } else {
-            console.error("SpeechRecognition não suportado neste navegador.");
-            alert("Desculpe, esta funcionalidade de reconhecimento de voz não é suportada pelo seu navegador.");
-        }
-
-    </script>
+    
+    <script src="script.js"> </script>
+    
 </body>
 </html>                
 
