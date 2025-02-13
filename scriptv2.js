@@ -55,7 +55,7 @@ let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
 let stream; // Declare 'stream' globally for broader accessibility
-Let numberRecordings = 0;
+let numberRecordings = 0;
 
 // Variables related to audio context
 let analyser; // Declare here
