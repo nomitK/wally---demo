@@ -54,6 +54,8 @@ let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
+let stream; // Declare 'stream' globally for broader accessibility
+Let numberRecordings = 0;
 
 // Variables related to audio context
 let analyser; // Declare here
@@ -182,6 +184,10 @@ function initializeSpeechRecognition() {
 
 
 function startRecording(stream) {
+    numberRecordings++
+    console.log('Recording started');
+    console.log('Number of recordings',numberRecordings);
+    
     mediaRecorder = new MediaRecorder(stream);
     mediaRecorder.start();
     console.log('Recording started');
