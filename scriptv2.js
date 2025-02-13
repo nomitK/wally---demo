@@ -25,7 +25,6 @@ window.onload = function() {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
                 console.log('Recording started');
-                heartContainer.style.animationPlayState = 'running'; // Start heart animation
                 isRecording = true;
 
                 // Clear previous audio chunks
@@ -83,15 +82,14 @@ window.onload = function() {
                     if (!soundDetected) { // Start heart animation only on first detection
                         soundDetected = true;
                         console.log('Sound detected, heart starts bumping!');
+                        heartContainer.style.animationPlayState = 'running'; // Start heart animation
                     }
                 }
 
                 requestAnimationFrame(detectSilence);
             }
 
-            detectSilence();
 
-            // Set up SpeechRecognition API
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition();
@@ -120,9 +118,14 @@ window.onload = function() {
                 console.error('SpeechRecognition API is not supported in this browser.');
             }
 
+
+            detectSilence();
+
             // Start the first recording
             startRecording();
+            // Set up SpeechRecognition API
 
+            
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
         });
