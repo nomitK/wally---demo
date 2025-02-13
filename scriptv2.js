@@ -10,6 +10,7 @@
 //media devices such as cameras and microphones.
 
 
+
 //3: NAVIGATOR.MEDIADEVICES.GETUSERMEDIA
 //This is a method provided by the MediaDevices interface. It prompts the user for permission to use a media input (like a microphone or camera) 
 //and returns a promise that resolves to a MediaStream object if the permission is granted.
