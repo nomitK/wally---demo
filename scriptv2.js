@@ -269,7 +269,7 @@ window.onload = function() {
             source.connect(analyser);
             dataArray = new Uint8Array(analyser.fftSize); // Analysis
 
-            if (finalizeSession === true) {
+            if (finalizeSession === false) {
                 detectSilence();
                 initializeSpeechRecognition();
 
