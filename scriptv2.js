@@ -53,6 +53,7 @@ let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
+let stream; // Declare the stream variable globally
 
 // Variables related to audio context
 let analyser; // Declare here
