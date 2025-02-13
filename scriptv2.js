@@ -56,11 +56,11 @@ let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
 let stream; // Declare 'stream' globally for broader accessibility
 let numberRecordings = 0;
-
+let finalizeSession = false;
 // Variables related to audio context
 let analyser; // Declare here
 let dataArray;
-const silenceDurationThreshold = 5000; // Silence condition
+const silenceDurationThreshold = 4000; // Silence condition
 
 
 //GLOBAL FUNCTIONS
@@ -72,8 +72,28 @@ function speakQuestion1() {
     }
 
     const speech = new SpeechSynthesisUtterance();
-    speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
-    speech.lang = 'en-US';
+    if (numberRecordings === 1) { 
+        speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
+        speech.lang = 'en-US';
+    } 
+    else if (numberRecordings === 2) { 
+        speech.text = "Question 2";
+        speech.lang = 'en-US';
+    } 
+    else if (numberRecordings === 3) { 
+        speech.text = "Question 3";
+        speech.lang = 'en-US';
+    } 
+    else if (numberRecordings === 4) { 
+        speech.text = "Question 4";
+        speech.lang = 'en-US';
+    }     
+    else {
+        speech.text = "Good bye";
+        speech.lang = 'en-US';
+        finalizeSession = true
+    }
+    
 
     // Flag to indicate speaking in progress
     isSpeaking = true; 
@@ -249,11 +269,15 @@ window.onload = function() {
             source.connect(analyser);
             dataArray = new Uint8Array(analyser.fftSize); // Analysis
 
-            detectSilence();
-            initializeSpeechRecognition();
+            if (finalizeSession === true) {
+                detectSilence();
+                initializeSpeechRecognition();
 
-            // Start the initial recording
-            startRecording(stream);
+                // Start the initial recording
+                startRecording(stream);
+            } else {
+                heartContainer.style.animationPlayState = 'paused';
+            }
 
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
