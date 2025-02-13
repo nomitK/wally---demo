@@ -107,9 +107,11 @@ function speakQuestion1() {
     // Setup event listener for when speaking ends
     speech.onend = function() {
         isSpeaking = false; // Reset speaking flag
-        console.log('Speech synthesis finished. Resuming recording...');
-        heartContainer.style.animationPlayState = 'running'; // Resume heart animation
-        startRecording(stream); // Resume recording after speaking
+        if (finalizeSession === false) {
+            console.log('Speech synthesis finished. Resuming recording...');
+            heartContainer.style.animationPlayState = 'running'; // Resume heart animation
+            startRecording(stream); // Resume recording after speaking
+        }
     };
 
     window.speechSynthesis.speak(speech); // Execute the text-to-speech
