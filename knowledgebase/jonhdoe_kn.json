@@ -1,0 +1,81 @@
+{
+  "personalInformation": {
+    "name": "John Doe",
+    "birthdate": "1981-05-14",
+    "age": 43,
+    "gender": "male",
+    "maritalstatus":"married",
+    
+    
+    
+  },
+  "contactInformation": {
+    "email": "rui.evora@gmail.com",
+    "phone": "+351 961234567",
+    "emergencyContact": {
+      "name": "Raquel Geraldes",
+      "relationship": "Spouse",
+      "phone": "+351 961234567"
+    }
+  },
+  "familyDoctor": {
+    "email": "rui.evora@gmail.com",
+    "phone": "+351 961234567",
+    "emergencyContact": {
+      "name": "Raquel Geraldes",
+      "relationship": "Spouse",
+      "phone": "+351 961234567"
+    }
+  },  
+  "healthMetrics": [
+    {
+      "date": "2025-02-01",
+      "bloodPressure": {
+        "systolic": 120,
+        "diastolic": 80
+      },
+      "cholesterol": {
+        "total": 190,
+        "hdl": 60,
+        "ldl": 100
+      },
+      "height": 180,
+      "weight": 75
+    }
+  ],
+  "lifestyleData": [
+    {
+      "date": "2025-02-01",
+      "exercise": [
+        {
+          "type": "Running",
+          "duration": 30, // in minutes
+          "caloriesBurned": 300
+        }
+      ],
+      "diet": [
+        {
+          "meal": "Breakfast",
+          "items": [
+            "Oatmeal",
+            "Banana",
+            "Coffee"
+          ]
+        }
+      ]
+    }
+  ],
+  "medicalHistory": [
+    {
+      "condition": "Hypertension",
+      "diagnosisDate": "2020-01-01",
+      "treatment": "Medication",
+      "notes": "Blood pressure under control with medication."
+    }
+  ],
+  "questionsToAsk": [
+    "What is your current weight?",
+    "Have you experienced any new symptoms?",
+    "Are there any changes to your medication?"
+  ]
+}
