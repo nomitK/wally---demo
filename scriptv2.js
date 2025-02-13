@@ -173,6 +173,7 @@ if (finalizeSession === false) {
 else {
 console.log("done!!")
 }
+}
 
 
 //FUNCTION 3: INITIATE SPEECH RECOGNITION
@@ -209,6 +210,7 @@ function initializeSpeechRecognition() {
 }
 else {
 console.log("done!!")
+}
 }
 
 
@@ -266,6 +268,7 @@ function startRecording(stream) {
 }
 else {
 console.log("done!!")
+}
 }
 
 
