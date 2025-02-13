@@ -45,8 +45,8 @@ window.onload = function() {
                     // Process the recorded audio
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const audioUrl = URL.createObjectURL(audioBlob);
-                    const audioElement = new Audio(audioUrl);
-                    audioElement.play();
+                    //const audioElement = new Audio(audioUrl);
+                    //audioElement.play();
 
                     const downloadLink = document.createElement('a');
                     downloadLink.href = audioUrl;
@@ -107,6 +107,15 @@ window.onload = function() {
 
                     if (transcript) {
                         console.log('Recognized words:', transcript);
+
+                        // If "stop" command is detected, stop recording
+                        if (transcript.toLowerCase().includes('stop')) {
+                            if (isRecording) {
+                                mediaRecorder.stop(); // This will call the onstop event to save the compiled file
+                                console.log('Recording stopped by user command.');
+                            }
+                        }
+                        
                     }
                 };
 
