@@ -107,6 +107,7 @@ function detectSilence() {
     
             if (durationSilence >= silenceDurationThreshold) {
                 // Stop the recording and show the downloadable link if silence exceeds 5 seconds
+                console.log(`Stop recording - speech initiated`);
                 if (mediaRecorder && isRecording) {
                     mediaRecorder.stop();
                     console.log('Stopped due to silence');
