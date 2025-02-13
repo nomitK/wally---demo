@@ -3,6 +3,7 @@ let mediaRecorder;
 let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
+let istoSavefinalFile = false;
 
 window.onload = function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -49,13 +50,13 @@ window.onload = function() {
                     //audioElement.play();
 
                     const downloadLink = document.createElement('a');
-                    downloadLink.href = audioUrl;
-                    downloadLink.download = 'recorded_audio.webm';
-                    downloadLink.textContent = 'Download recorded audio';
-                    document.body.appendChild(downloadLink);
+                    if (istoSavefinalFile) {
+                        downloadLink.href = audioUrl;
+                        downloadLink.download = 'recorded_audio.webm';
+                        downloadLink.textContent = 'Download recorded audio';
+                        document.body.appendChild(downloadLink);
+                    }
 
-                    // Start a new recording automatically
-                    startRecording();
                 };
             }
 
@@ -65,7 +66,7 @@ window.onload = function() {
                 const averageVolume = sum / dataArray.length;
 
                 // Check for silence
-                if (averageVolume < 10) { // Arbitrary silence threshold
+                if (averageVolume < 50) { // Arbitrary silence threshold
                     if (!silenceStart) {
                         silenceStart = Date.now();
                         silenceTimeoutId = setTimeout(() => {
@@ -112,6 +113,7 @@ window.onload = function() {
                         if (transcript.toLowerCase().includes('stop')) {
                             if (isRecording) {
                                 mediaRecorder.stop(); // This will call the onstop event to save the compiled file
+                                istoSavefinalFile = true
                                 console.log('Recording stopped by user command.');
                             }
                         }
