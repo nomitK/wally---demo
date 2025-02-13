@@ -63,6 +63,9 @@ window.onload = function() {
                         document.body.appendChild(downloadLink);
                    // }
 
+                    // Start a new recording automatically
+                    startRecording();
+                    
                 };
             }
 
