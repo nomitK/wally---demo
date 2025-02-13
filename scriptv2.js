@@ -220,8 +220,9 @@ function startRecording(stream) {
         downloadLink.download = 'recorded_audio.webm';
         downloadLink.textContent = 'Download recorded audio';
         document.body.appendChild(downloadLink);
-       
-
+        
+        // this a test
+        isRecording = true
         // Start a new recording automatically
         //startRecording();
         
