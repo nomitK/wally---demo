@@ -79,7 +79,7 @@ window.onload = function() {
                     silenceStart = null;
                     clearTimeout(silenceTimeoutId);
 
-                    if (!soundDetected) { // Start heart animation only on first detection
+                    if (!soundDetected || (soundDetected && !isRecording)) { // Start heart animation only on first detection and also on next iterations
                         soundDetected = true;
                         console.log('Sound detected, heart starts bumping!');
                         heartContainer.style.animationPlayState = 'running'; // Start heart animation
