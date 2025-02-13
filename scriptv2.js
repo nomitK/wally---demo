@@ -85,7 +85,7 @@ function speakQuestion1() {
     speech.onend = function() {
         console.log('Speech synthesis finished. Resuming recording...');
         isSpeaking = false; // Reset flag
-        startRecording(); // Call to resume recording after question is spoken
+        //startRecording(); // Call to resume recording after question is spoken
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
