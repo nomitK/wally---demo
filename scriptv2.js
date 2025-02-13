@@ -56,12 +56,12 @@ window.onload = function() {
                     }
                     
                     const downloadLink = document.createElement('a');
-                  //  if (istoSavefinalFile) {
-                        downloadLink.href = audioUrl;
-                        downloadLink.download = 'recorded_audio.webm';
-                        downloadLink.textContent = 'Download recorded audio';
-                        document.body.appendChild(downloadLink);
-                   // }
+                    downloadLink.id = 'compiledAudioLink'; // Identify this link for future reference
+                    downloadLink.href = audioUrl;
+                    downloadLink.download = 'recorded_audio.webm';
+                    downloadLink.textContent = 'Download recorded audio';
+                    document.body.appendChild(downloadLink);
+                   
 
                     // Start a new recording automatically
                     startRecording();
