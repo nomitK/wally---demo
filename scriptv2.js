@@ -80,6 +80,7 @@ function speakQuestion1() {
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
+    isRecording = true;
 }
 
 
