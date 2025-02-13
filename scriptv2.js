@@ -70,13 +70,20 @@ function speakQuestion1() {
     speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
     speech.lang = 'en-US';
 
+    // Stop recording before speaking
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop(); // Stop recording
+        console.log('Stopped recording for speech synthesis');
+    }
+
     // Set the flag before speaking
     isSpeaking = true; 
 
-    // Reset the flag after speaking ends
+    // Resume recording after speaking ends
     speech.onend = function() {
         console.log('Speech synthesis finished. Resuming recording...');
-        isSpeaking = false; // Reset flag when speaking ends
+        isSpeaking = false; // Reset flag
+        startRecording(stream); // Call to resume recording after question is spoken
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
