@@ -149,7 +149,7 @@ function initializeSpeechRecognition() {
 }
 
 
-function startRecording() {
+function startRecording(stream) {
     mediaRecorder = new MediaRecorder(stream);
     mediaRecorder.start();
     console.log('Recording started');
