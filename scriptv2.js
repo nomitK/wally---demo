@@ -242,7 +242,7 @@ function startRecording(stream) {
         isRecording = false;
 
         // Process the recorded audio
-        if (finalizeSession = true) {
+//        if (finalizeSession = true) {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const audioUrl = URL.createObjectURL(audioBlob);
             //const audioElement = new Audio(audioUrl);
@@ -260,7 +260,7 @@ function startRecording(stream) {
             downloadLink.download = 'recorded_audio.webm';
             downloadLink.textContent = 'Download recorded audio';
             document.body.appendChild(downloadLink);
-        }
+ //       }
         // this a test
         isRecording = true
         // Start a new recording automatically
