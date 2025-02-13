@@ -56,6 +56,7 @@ let silenceTimeoutId;
 // Variables related to audio context
 let analyser; // Declare here
 let dataArray;
+const silenceDurationThreshold = 5000; // Silence condition
 
 
 //GLOBAL FUNCTIONS
@@ -224,7 +225,7 @@ window.onload = function() {
             const silenceDurationThreshold = 5000; // 5 seconds threshold
             let soundDetected = false;
 
-            initializeSpeechRecognition()
+            initializeSpeechRecognition();
 
 
             detectSilence();
