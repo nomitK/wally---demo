@@ -50,12 +50,12 @@ window.onload = function() {
                     //audioElement.play();
 
                     const downloadLink = document.createElement('a');
-                    if (istoSavefinalFile) {
+                  //  if (istoSavefinalFile) {
                         downloadLink.href = audioUrl;
                         downloadLink.download = 'recorded_audio.webm';
                         downloadLink.textContent = 'Download recorded audio';
                         document.body.appendChild(downloadLink);
-                    }
+                   // }
 
                 };
             }
@@ -66,7 +66,7 @@ window.onload = function() {
                 const averageVolume = sum / dataArray.length;
 
                 // Check for silence
-                if (averageVolume < 50) { // Arbitrary silence threshold
+                if (averageVolume < 10) { // Arbitrary silence threshold
                     if (!silenceStart) {
                         silenceStart = Date.now();
                         silenceTimeoutId = setTimeout(() => {
@@ -110,13 +110,13 @@ window.onload = function() {
                         console.log('Recognized words:', transcript);
 
                         // If "stop" command is detected, stop recording
-                        if (transcript.toLowerCase().includes('stop')) {
-                            if (isRecording) {
-                                mediaRecorder.stop(); // This will call the onstop event to save the compiled file
-                                istoSavefinalFile = true
-                                console.log('Recording stopped by user command.');
-                            }
-                        }
+                        //if (transcript.toLowerCase().includes('stop')) {
+                        //    if (isRecording) {
+                        //        mediaRecorder.stop(); // This will call the onstop event to save the compiled file
+                        //        istoSavefinalFile = true
+                        //        console.log('Recording stopped by user command.');
+                        //    }
+                       // }
                         
                     }
                 };
