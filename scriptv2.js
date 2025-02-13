@@ -27,8 +27,9 @@ window.onload = function() {
                 console.log('Recording started');
                 isRecording = true;
 
-                // Clear previous audio chunks
-                audioChunks = [];
+                
+                audioChunks = []; // Clear previous audio chunks
+                soundDetected = false; // Reset sound detection for the new recording
 
                 mediaRecorder.ondataavailable = function(event) {
                     if (event.data.size > 0) {
