@@ -53,7 +53,6 @@ let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
-let stream; // Declare the stream variable globally
 
 // Variables related to audio context
 let analyser; // Declare here
@@ -77,7 +76,6 @@ function speakQuestion1() {
     speech.onend = function() {
         console.log('Speech synthesis finished. Resuming recording...');
         isSpeaking = false; // Reset flag when speaking ends
-        startRecording(stream); // Call to resume recording after question is spoken
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
@@ -104,11 +102,13 @@ function detectSilence() {
         } else {
         // Calculate the total silent duration
         const durationSilence = Date.now() - silenceStart;
-        console.log(`Silence duration: ${durationSilence} ms`);
+        //console.log(`Silence duration: ${durationSilence} ms`);
     
             if (durationSilence >= silenceDurationThreshold) {
                 // Stop the recording and show the downloadable link if silence exceeds 5 seconds
                 console.log(`Stop recording - speech initiated`);
+                console.log(mediaRecorder);
+                console.log(isRecording);
                 if (mediaRecorder && isRecording) {
                     mediaRecorder.stop();
                     console.log('Stopped due to silence');
