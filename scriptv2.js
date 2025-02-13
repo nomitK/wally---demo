@@ -49,6 +49,12 @@ window.onload = function() {
                     //const audioElement = new Audio(audioUrl);
                     //audioElement.play();
 
+                    // Remove any previous download link if it exists
+                    const existingLink = document.getElementById('compiledAudioLink');
+                    if (existingLink) {
+                        existingLink.remove();
+                    }
+                    
                     const downloadLink = document.createElement('a');
                   //  if (istoSavefinalFile) {
                         downloadLink.href = audioUrl;
