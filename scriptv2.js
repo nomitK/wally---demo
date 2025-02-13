@@ -135,15 +135,6 @@ function initializeSpeechRecognition() {
 
             if (transcript) {
                 console.log('Recognized words:', transcript);
-
-                // Uncomment and modify to add functionality for stopping recording
-                // if (transcript.toLowerCase().includes('stop')) {
-                //     if (isRecording) {
-                //         mediaRecorder.stop(); // This will call the onstop event to save the compiled file
-                //         let istoSavefinalFile = true;
-                //         console.log('Recording stopped by user command.');
-                //     }
-                // }  
             }
         };
 
@@ -200,7 +191,7 @@ function startRecording() {
        
 
         // Start a new recording automatically
-        startRecording();
+        //startRecording();
         
     };
 }
@@ -214,27 +205,17 @@ window.onload = function() {
         .then(function(stream) {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioContext.createMediaStreamSource(stream);
-            const analyser = audioContext.createAnalyser();
+            analyser = audioContext.createAnalyser(); // Initialize analyser
             analyser.fftSize = 256;
 
             source.connect(analyser);
 
-            const dataArray = new Uint8Array(analyser.fftSize);
-            let silenceStart = null;
-            let silenceTimeoutId;
-            const silenceDurationThreshold = 5000; // 5 seconds threshold
-            let soundDetected = false;
+            dataArray = new Uint8Array(analyser.fftSize); // Initialize dataArray to hold audio data
 
-            initializeSpeechRecognition();
-
-
-            detectSilence();
-
-            // Start the first recording
-            startRecording();
-            // Set up SpeechRecognition API
-
-            
+            // Start recording and detecting silence
+            startRecording(stream);   // Call function to start recording
+            detectSilence();          // Start detecting silence
+            initializeSpeechRecognition(); // Set up speech recognition
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
         });
