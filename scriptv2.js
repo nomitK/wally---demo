@@ -1,10 +1,59 @@
+/***************************************************************************************************************************************************************************************************************************************************/
+/***--                                                                                                                LEARNINGS                                                                                                                --***/
+/***************************************************************************************************************************************************************************************************************************************************/
+
+//1: NAVIGATOR OBJECT
+//This is a built-in object in the browser that provides information about the web browser and the operating system. It is part of the Window interface.
+
+//2: NAVIGATOR.MEDIADEVICES
+//This is a property of the navigator object that provides access to the MediaDevices interface, which is responsible for managing 
+//media devices such as cameras and microphones.
+
+
+//3: NAVIGATOR.MEDIADEVICES.GETUSERMEDIA
+//This is a method provided by the MediaDevices interface. It prompts the user for permission to use a media input (like a microphone or camera) 
+//and returns a promise that resolves to a MediaStream object if the permission is granted.
+
+
+//4: STREAM PARAMETER
+//The stream parameter is an instance of the MediaStream object, which represents the media stream from the user's device.
+//This object contains the audio (or video, if requested) tracks that you can work with, such as playing back the audio or sending it to a server.
+
+//5:Dynamics of .then() and .catch()
+//The .catch(function(err) {}) method is associated with the preceding .then(function(stream) {...}) as part of the Promise handling mechanism in JavaScript. 
+//Here’s how it works and its significance:
+//Promise Structure:
+
+//When you call a function that returns a Promise (like navigator.mediaDevices.getUserMedia()), it can be in one of three states:
+//Pending: The initial state, neither fulfilled nor rejected.
+//Fulfilled: The operation completed successfully.
+//Rejected: The operation failed (an error occurred).
+
+
+//Using .then():
+//The .then() method is used to specify what should happen when the Promise is fulfilled (i.e., when the asynchronous operation completes successfully).
+//When you use .then(), you can pass in a callback function that will execute with the result of the fulfilled Promise—in this case, the stream object.
+
+//Using .catch():
+//The .catch() method is used to handle any errors that occur during the execution of the Promise.
+//If the Promise is rejected (i.e., if there is an error, such as the user denying permission to access the microphone), the callback function inside .catch() will execute
+
+
+//6: requestAnimationFrame
+//The requestAnimationFrame(detectSilence) function in JavaScript is a method that tells the browser to perform an animation or execute a function that updates the animation before the next repaint. 
+
+
+//GLOBAL VARIABLES
 let mediaRecorder;
 
 let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
 
-function speakQuestion() {
+
+//GLOBAL FUNCTIONS
+//FUNCTION 1: MOCK QUESTIONS
+function speakQuestion1() {
     const speech = new SpeechSynthesisUtterance();
     speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First I'd like to know your name and date of birth.";
     speech.lang = 'en-US'; // Set the language
@@ -12,25 +61,94 @@ function speakQuestion() {
 }
 
 
+//FUNCTION 2: DETECT SILENCE
+function detectSilence() {
+  analyser.getByteFrequencyData(dataArray);
+  const sum = dataArray.reduce((a, b) => a + b, 0);
+  const averageVolume = sum / dataArray.length;
 
+    // Check for silence
+    if (averageVolume < 10) { // Arbitrary silence threshold
+        if (!silenceStart) {
+            silenceStart = Date.now(); // Mark the start of silence
+        } else {
+        // Calculate the total silent duration
+        const durationSilence = Date.now() - silenceStart;
+        console.log(`Silence duration: ${durationSilence} ms`);
+    
+            if (durationSilence >= silenceDurationThreshold) {
+                // Stop the recording and show the downloadable link if silence exceeds 5 seconds
+                if (mediaRecorder && isRecording) {
+                    mediaRecorder.stop();
+                    console.log('Stopped due to silence');
+    
+                     // Instead of playing a pre-saved audio, use the voice synthesis
+                    speakQuestion(); // Call the function to speak the question
+    
+                    // Show completion message
+                    const completionMessage = document.createElement('p');
+                    completionMessage.textContent = 'Step of conversation completed';
+                    document.body.appendChild(completionMessage);
+    }
+    // Reset silence tracking
+    silenceStart = null; // Reset to prepare for the next detection
+    }
+    }
+    } else {
+        silenceStart = null;
+        clearTimeout(silenceTimeoutId);
+    
+        if (!soundDetected || (soundDetected && !isRecording)) { // Start heart animation only on first detection and also on next iterations
+            soundDetected = true;
+            console.log('Sound detected, heart starts bumping!');
+            heartContainer.style.animationPlayState = 'running'; // Start heart animation
+        }
+    }
+    
+    requestAnimationFrame(detectSilence);
+}
 
+//FUNCTION 3: INITIATE SPEECH RECOGNITION
+function initializeSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-window.onload = function() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(function(stream) {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaStreamSource(stream);
-            const analyser = audioContext.createAnalyser();
-            analyser.fftSize = 256;
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true; // Keep listening
+        recognition.interimResults = true; // Provide interim results
+        
+        recognition.onresult = function(event) {
+            let transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    transcript += event.results[i][0].transcript.trim() + ' ';
+                }
+            }
 
-            source.connect(analyser);
+            if (transcript) {
+                console.log('Recognized words:', transcript);
 
-            const dataArray = new Uint8Array(analyser.fftSize);
-            let silenceStart = null;
-            let silenceTimeoutId;
-            const silenceDurationThreshold = 5000; // 5 seconds threshold
-            let soundDetected = false;
+                // Uncomment and modify to add functionality for stopping recording
+                // if (transcript.toLowerCase().includes('stop')) {
+                //     if (isRecording) {
+                //         mediaRecorder.stop(); // This will call the onstop event to save the compiled file
+                //         let istoSavefinalFile = true;
+                //         console.log('Recording stopped by user command.');
+                //     }
+                // }  
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+        };
+
+        recognition.start(); // Start recognition
+    } else {
+        console.error('SpeechRecognition API is not supported in this browser.');
+    }
+}
+
 
             function startRecording() {
                 mediaRecorder = new MediaRecorder(stream);
@@ -79,91 +197,27 @@ window.onload = function() {
                 };
             }
 
-            function detectSilence() {
-                analyser.getByteFrequencyData(dataArray);
-                const sum = dataArray.reduce((a, b) => a + b, 0);
-                const averageVolume = sum / dataArray.length;
 
-                // Check for silence
+//FUNCTION 3: WHAT HAPPENS ON PAGE LOAD
 
-                if (averageVolume < 10) { // Arbitrary silence threshold
-                    if (!silenceStart) {
-                        silenceStart = Date.now(); // Mark the start of silence
-                    } else {
-                    // Calculate the total silent duration
-                    const durationSilence = Date.now() - silenceStart;
-                    console.log(`Silence duration: ${durationSilence} ms`);
+window.onload = function() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaStreamSource(stream);
+            const analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
 
-                        if (durationSilence >= silenceDurationThreshold) {
-                            // Stop the recording and show the downloadable link if silence exceeds 5 seconds
-                            if (mediaRecorder && isRecording) {
-                                mediaRecorder.stop();
-                                console.log('Stopped due to silence');
+            source.connect(analyser);
 
-                                 // Instead of playing a pre-saved audio, use the voice synthesis
-                                speakQuestion(); // Call the function to speak the question
+            const dataArray = new Uint8Array(analyser.fftSize);
+            let silenceStart = null;
+            let silenceTimeoutId;
+            const silenceDurationThreshold = 5000; // 5 seconds threshold
+            let soundDetected = false;
 
-                                // Show completion message
-                                const completionMessage = document.createElement('p');
-                                completionMessage.textContent = 'Step of conversation completed';
-                                document.body.appendChild(completionMessage);
-                }
-                // Reset silence tracking
-                silenceStart = null; // Reset to prepare for the next detection
-            }
-        }
-                } else {
-                    silenceStart = null;
-                    clearTimeout(silenceTimeoutId);
-
-                    if (!soundDetected || (soundDetected && !isRecording)) { // Start heart animation only on first detection and also on next iterations
-                        soundDetected = true;
-                        console.log('Sound detected, heart starts bumping!');
-                        heartContainer.style.animationPlayState = 'running'; // Start heart animation
-                    }
-                }
-
-                requestAnimationFrame(detectSilence);
-            }
-
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRecognition) {
-                const recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
-
-                recognition.onresult = function(event) {
-                    let transcript = '';
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        if (event.results[i].isFinal) {
-                            transcript += event.results[i][0].transcript.trim() + ' ';
-                        }
-                    }
-
-                    if (transcript) {
-                        console.log('Recognized words:', transcript);
-
-                        // If "stop" command is detected, stop recording
-                        //if (transcript.toLowerCase().includes('stop')) {
-                        //    if (isRecording) {
-                        //        mediaRecorder.stop(); // This will call the onstop event to save the compiled file
-                        //        istoSavefinalFile = true
-                        //        console.log('Recording stopped by user command.');
-                        //    }
-                       // }
-                        
-                    }
-                };
-
-                recognition.onerror = function(event) {
-                    console.error('Speech recognition error:', event.error);
-                };
-
-                recognition.start();
-            } else {
-                console.error('SpeechRecognition API is not supported in this browser.');
-            }
+            initializeSpeechRecognition()
 
 
             detectSilence();
