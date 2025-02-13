@@ -96,6 +96,7 @@ function speakQuestion1() {
         speech.text = "So, wraping up todays conversation. You should aim to be more active next week, and ideally avoid night snacking and alchool. I'll talk you later this week, hoping that you are making progress on your goals! See ya, and Be-Healthy!";
         speech.lang = 'en-US';
         finalizeSession = true
+        heartContainer.style.animationPlayState = 'paused';
     }
     
 
@@ -150,7 +151,7 @@ if (finalizeSession === false) {
     
                     // Show completion message
                     const completionMessage = document.createElement('p');
-                    completionMessage.textContent = 'Step of conversation completed';
+                    //completionMessage.textContent = 'Step of conversation completed';
                     document.body.appendChild(completionMessage);
     }
     // Reset silence tracking
@@ -241,24 +242,25 @@ function startRecording(stream) {
         isRecording = false;
 
         // Process the recorded audio
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        //const audioElement = new Audio(audioUrl);
-        //audioElement.play();
-
-        // Remove any previous download link if it exists
-        const existingLink = document.getElementById('compiledAudioLink');
-        if (existingLink) {
-            existingLink.remove();
+        if (finalizeSession = true) {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            //const audioElement = new Audio(audioUrl);
+            //audioElement.play();
+    
+            // Remove any previous download link if it exists
+            const existingLink = document.getElementById('compiledAudioLink');
+            if (existingLink) {
+                existingLink.remove();
+            }
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.id = 'compiledAudioLink'; // Identify this link for future reference
+            downloadLink.href = audioUrl;
+            downloadLink.download = 'recorded_audio.webm';
+            downloadLink.textContent = 'Download recorded audio';
+            document.body.appendChild(downloadLink);
         }
-        
-        const downloadLink = document.createElement('a');
-        downloadLink.id = 'compiledAudioLink'; // Identify this link for future reference
-        downloadLink.href = audioUrl;
-        downloadLink.download = 'recorded_audio.webm';
-        downloadLink.textContent = 'Download recorded audio';
-        document.body.appendChild(downloadLink);
-        
         // this a test
         isRecording = true
         // Start a new recording automatically
