@@ -54,7 +54,7 @@ let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
-//let stream; // Declare 'stream' globally for broader accessibility
+let stream; // Declare 'stream' globally for broader accessibility
 let numberRecordings = 0;
 
 // Variables related to audio context
@@ -66,26 +66,29 @@ const silenceDurationThreshold = 5000; // Silence condition
 //GLOBAL FUNCTIONS
 //FUNCTION 1: MOCK QUESTIONS
 function speakQuestion1() {
-    //The heart should stop pumoing when the assistant is talking (in the future we should add a second image that will illustrate that the assistant is talking
-    heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
+    if (isRecording) {
+        mediaRecorder.stop(); // Stop recording before speaking
+        console.log('Stopped recording for speech synthesis');
+    }
+
     const speech = new SpeechSynthesisUtterance();
     speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
     speech.lang = 'en-US';
 
-    // Set the flag before speaking
+    // Flag to indicate speaking in progress
     isSpeaking = true; 
+    heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
 
-    // Resume recording after speaking ends
+    // Setup event listener for when speaking ends
     speech.onend = function() {
+        isSpeaking = false; // Reset speaking flag
         console.log('Speech synthesis finished. Resuming recording...');
-        isSpeaking = false; // Reset flag
-        //startRecording(); // Call to resume recording after question is spoken
+        heartContainer.style.animationPlayState = 'running'; // Resume heart animation
+        startRecording(stream); // Resume recording after speaking
     };
 
-    window.speechSynthesis.speak(speech); // Speak the text
-    isRecording = true;
+    window.speechSynthesis.speak(speech); // Execute the text-to-speech
 }
-
 
 //FUNCTION 2: DETECT SILENCE
 function detectSilence() {
@@ -235,24 +238,27 @@ function startRecording(stream) {
 window.onload = function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(function(stream) {
+        .then(function(userStream) {
+            stream = userStream; // Save the stream for reuse
+
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioContext.createMediaStreamSource(stream);
-            analyser = audioContext.createAnalyser(); // Initialize analyser
+            analyser = audioContext.createAnalyser();
             analyser.fftSize = 256;
 
             source.connect(analyser);
+            dataArray = new Uint8Array(analyser.fftSize); // Analysis
 
-            dataArray = new Uint8Array(analyser.fftSize); // Initialize dataArray to hold audio data
+            detectSilence();
+            initializeSpeechRecognition();
 
-            // Start recording and detecting silence
-            startRecording(stream);   // Call function to start recording
-            detectSilence();          // Start detecting silence
-            initializeSpeechRecognition(); // Set up speech recognition
+            // Start the initial recording
+            startRecording(stream);
+
         }).catch(function(err) {
             console.error('Error accessing microphone:', err);
         });
     } else {
-        console.error('getUserMedia not supported on your browser!');
+        console.error('getUserMedia not supported in this browser!');
     }
 };
