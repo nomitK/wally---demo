@@ -75,17 +75,30 @@ window.onload = function() {
                 const averageVolume = sum / dataArray.length;
 
                 // Check for silence
+
                 if (averageVolume < 10) { // Arbitrary silence threshold
                     if (!silenceStart) {
-                        silenceStart = Date.now();
-                        silenceTimeoutId = setTimeout(() => {
-                            // Stop the recording if silence persists
+                        silenceStart = Date.now(); // Mark the start of silence
+                    } else {
+                    // Calculate the total silent duration
+                    const durationSilence = Date.now() - silenceStart;
+                    console.log(`Silence duration: ${durationSilence} ms`);
+
+                        if (durationSilence >= silenceDurationThreshold) {
+                            // Stop the recording and show the downloadable link if silence exceeds 5 seconds
                             if (mediaRecorder && isRecording) {
                                 mediaRecorder.stop();
                                 console.log('Stopped due to silence');
-                            }
-                        }, silenceDurationThreshold);
-                    }
+
+                                // Show completion message
+                                const completionMessage = document.createElement('p');
+                                completionMessage.textContent = 'Step of conversation completed';
+                                document.body.appendChild(completionMessage);
+                }
+                // Reset silence tracking
+                silenceStart = null; // Reset to prepare for the next detection
+            }
+        }
                 } else {
                     silenceStart = null;
                     clearTimeout(silenceTimeoutId);
