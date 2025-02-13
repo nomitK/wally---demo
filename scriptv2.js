@@ -3,7 +3,7 @@ let mediaRecorder;
 let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
-let istoSavefinalFile = false;
+
 
 window.onload = function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -39,7 +39,7 @@ window.onload = function() {
                 };
 
                 mediaRecorder.onstop = function() {
-                    console.log('Recording stopped due to silence.');
+                    console.log('Recording stopped.');
                     heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
                     isRecording = false;
 
