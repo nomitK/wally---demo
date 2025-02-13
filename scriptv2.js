@@ -54,7 +54,7 @@ let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
 let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
-let stream; // Declare 'stream' globally for broader accessibility
+//let stream; // Declare 'stream' globally for broader accessibility
 let numberRecordings = 0;
 
 // Variables related to audio context
@@ -65,7 +65,7 @@ const silenceDurationThreshold = 5000; // Silence condition
 
 //GLOBAL FUNCTIONS
 //FUNCTION 1: MOCK QUESTIONS
-function speakQuestion1() {
+function speakQuestion1(stream) {
     //The heart should stop pumoing when the assistant is talking (in the future we should add a second image that will illustrate that the assistant is talking
     heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
     const speech = new SpeechSynthesisUtterance();
