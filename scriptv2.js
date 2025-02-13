@@ -45,10 +45,17 @@
 
 //GLOBAL VARIABLES
 let mediaRecorder;
-
 let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
+let messageDisplayed = false; // Flag for completion message
+let soundDetected = false; // Flag to indicate sound detection
+let silenceStart = null; // Reset silence start time
+let silenceTimeoutId;
+
+// Variables related to audio context
+let analyser; // Declare here
+let dataArray;
 
 
 //GLOBAL FUNCTIONS
@@ -150,52 +157,52 @@ function initializeSpeechRecognition() {
 }
 
 
-            function startRecording() {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
-                console.log('Recording started');
-                isRecording = true;
+function startRecording() {
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.start();
+    console.log('Recording started');
+    isRecording = true;
 
-                
-                //audioChunks = []; // Clear previous audio chunks
-                soundDetected = false; // Reset sound detection for the new recording
+    
+    //audioChunks = []; // Clear previous audio chunks
+    soundDetected = false; // Reset sound detection for the new recording
 
-                mediaRecorder.ondataavailable = function(event) {
-                    if (event.data.size > 0) {
-                        audioChunks.push(event.data); // Collect the audio data
-                    }
-                };
+    mediaRecorder.ondataavailable = function(event) {
+        if (event.data.size > 0) {
+            audioChunks.push(event.data); // Collect the audio data
+        }
+    };
 
-                mediaRecorder.onstop = function() {
-                    console.log('Recording stopped.');
-                    heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
-                    isRecording = false;
+    mediaRecorder.onstop = function() {
+        console.log('Recording stopped.');
+        heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
+        isRecording = false;
 
-                    // Process the recorded audio
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    //const audioElement = new Audio(audioUrl);
-                    //audioElement.play();
+        // Process the recorded audio
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        //const audioElement = new Audio(audioUrl);
+        //audioElement.play();
 
-                    // Remove any previous download link if it exists
-                    const existingLink = document.getElementById('compiledAudioLink');
-                    if (existingLink) {
-                        existingLink.remove();
-                    }
-                    
-                    const downloadLink = document.createElement('a');
-                    downloadLink.id = 'compiledAudioLink'; // Identify this link for future reference
-                    downloadLink.href = audioUrl;
-                    downloadLink.download = 'recorded_audio.webm';
-                    downloadLink.textContent = 'Download recorded audio';
-                    document.body.appendChild(downloadLink);
-                   
+        // Remove any previous download link if it exists
+        const existingLink = document.getElementById('compiledAudioLink');
+        if (existingLink) {
+            existingLink.remove();
+        }
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.id = 'compiledAudioLink'; // Identify this link for future reference
+        downloadLink.href = audioUrl;
+        downloadLink.download = 'recorded_audio.webm';
+        downloadLink.textContent = 'Download recorded audio';
+        document.body.appendChild(downloadLink);
+       
 
-                    // Start a new recording automatically
-                    startRecording();
-                    
-                };
-            }
+        // Start a new recording automatically
+        startRecording();
+        
+    };
+}
 
 
 //FUNCTION 3: WHAT HAPPENS ON PAGE LOAD
