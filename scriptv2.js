@@ -65,7 +65,7 @@ const silenceDurationThreshold = 5000; // Silence condition
 
 //GLOBAL FUNCTIONS
 //FUNCTION 1: MOCK QUESTIONS
-function speakQuestion1(stream) {
+function speakQuestion1() {
     //The heart should stop pumoing when the assistant is talking (in the future we should add a second image that will illustrate that the assistant is talking
     heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
     const speech = new SpeechSynthesisUtterance();
@@ -85,7 +85,7 @@ function speakQuestion1(stream) {
     speech.onend = function() {
         console.log('Speech synthesis finished. Resuming recording...');
         isSpeaking = false; // Reset flag
-        startRecording(stream); // Call to resume recording after question is spoken
+        startRecording(); // Call to resume recording after question is spoken
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
