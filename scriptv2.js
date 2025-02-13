@@ -63,6 +63,8 @@ const silenceDurationThreshold = 5000; // Silence condition
 //GLOBAL FUNCTIONS
 //FUNCTION 1: MOCK QUESTIONS
 function speakQuestion1() {
+    //The heart should stop pumoing when the assistant is talking (in the future we should add a second image that will illustrate that the assistant is talking
+    heartContainer.style.animationPlayState = 'paused'; // Stop heart animation
     const speech = new SpeechSynthesisUtterance();
     speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
     speech.lang = 'en-US';
@@ -72,7 +74,9 @@ function speakQuestion1() {
 
     // Reset the flag after speaking ends
     speech.onend = function() {
+        console.log('Speech synthesis finished. Resuming recording...');
         isSpeaking = false; // Reset flag when speaking ends
+        startRecording(stream); // Call to resume recording after question is spoken
     };
 
     window.speechSynthesis.speak(speech); // Speak the text
