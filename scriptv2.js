@@ -52,6 +52,7 @@ let messageDisplayed = false; // Flag for completion message
 let soundDetected = false; // Flag to indicate sound detection
 let silenceStart = null; // Reset silence start time
 let silenceTimeoutId;
+let isSpeaking = false; // Flag to indicate if speech synthesis is in progress
 
 // Variables related to audio context
 let analyser; // Declare here
@@ -63,14 +64,30 @@ const silenceDurationThreshold = 5000; // Silence condition
 //FUNCTION 1: MOCK QUESTIONS
 function speakQuestion1() {
     const speech = new SpeechSynthesisUtterance();
-    speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First I'd like to know your name and date of birth.";
-    speech.lang = 'en-US'; // Set the language
+    speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First, I'd like to know your name and date of birth.";
+    speech.lang = 'en-US';
+
+    // Set the flag before speaking
+    isSpeaking = true; 
+
+    // Reset the flag after speaking ends
+    speech.onend = function() {
+        isSpeaking = false; // Reset flag when speaking ends
+    };
+
     window.speechSynthesis.speak(speech); // Speak the text
 }
 
 
 //FUNCTION 2: DETECT SILENCE
 function detectSilence() {
+
+    if (isSpeaking) {
+        // Skip silent detection while speaking
+        requestAnimationFrame(detectSilence); // Keep calling this function
+        return; // Exit the function to prevent further processing
+    }
+    
   analyser.getByteFrequencyData(dataArray);
   const sum = dataArray.reduce((a, b) => a + b, 0);
   const averageVolume = sum / dataArray.length;
