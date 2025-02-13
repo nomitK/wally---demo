@@ -77,19 +77,23 @@ function speakQuestion1() {
         speech.lang = 'en-US';
     } 
     else if (numberRecordings === 2) { 
-        speech.text = "Question 2";
+        speech.text = "Great! Now I want to know more about you! How is your level of stress doing, scale it from 1 to 10. What about your sleeping habits?";
         speech.lang = 'en-US';
     } 
     else if (numberRecordings === 3) { 
-        speech.text = "Question 3";
+        speech.text = "I see that you are doing great! Keeping the level of stress controled and having good slepping time is great. what about sports this week?";
         speech.lang = 'en-US';
     } 
     else if (numberRecordings === 4) { 
-        speech.text = "Question 4";
+        speech.text = "I see! This is clearly an area with room for improvement. Lets target to practive sports at least three times next week! Anything else you'd like me to know about your health and wellness?";
         speech.lang = 'en-US';
     }     
+    else if (numberRecordings === 5) { 
+        speech.text = "That it something that requires your attention. High coholesterol is clearly something you should take immediate action. Are you doing any specific diet?";
+        speech.lang = 'en-US';
+    }             
     else {
-        speech.text = "Good bye";
+        speech.text = "So, wraping up todays conversation. You should aim to be more active next week, and ideally avoid night snacking and alchool. I'll talk you later this week, hoping that you are making progress on your goals! See ya, and Be-Healthy!";
         speech.lang = 'en-US';
         finalizeSession = true
     }
@@ -112,7 +116,7 @@ function speakQuestion1() {
 
 //FUNCTION 2: DETECT SILENCE
 function detectSilence() {
-
+if (finalizeSession === false) {
     if (isSpeaking) {
         // Skip silent detection while speaking
         requestAnimationFrame(detectSilence); // Keep calling this function
@@ -166,9 +170,14 @@ function detectSilence() {
     
     requestAnimationFrame(detectSilence);
 }
+else {
+console.log("done!!")
+}
+
 
 //FUNCTION 3: INITIATE SPEECH RECOGNITION
 function initializeSpeechRecognition() {
+  if (finalizeSession === false) {  
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (SpeechRecognition) {
@@ -198,9 +207,13 @@ function initializeSpeechRecognition() {
         console.error('SpeechRecognition API is not supported in this browser.');
     }
 }
+else {
+console.log("done!!")
+}
 
 
 function startRecording(stream) {
+ if (finalizeSession === false) {  
     numberRecordings++
     console.log('Recording started');
     console.log('Number of recordings',numberRecordings);
@@ -250,6 +263,9 @@ function startRecording(stream) {
         //startRecording();
         
     };
+}
+else {
+console.log("done!!")
 }
 
 
