@@ -91,7 +91,7 @@ function detectSilence() {
                     console.log('Stopped due to silence');
     
                      // Instead of playing a pre-saved audio, use the voice synthesis
-                    speakQuestion(); // Call the function to speak the question
+                    speakQuestion1(); // Call the function to speak the question
     
                     // Show completion message
                     const completionMessage = document.createElement('p');
