@@ -4,6 +4,16 @@ let audioChunks = [];
 const heartContainer = document.getElementById('heartContainer');
 let isRecording = false;
 
+function speakQuestion() {
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = "Hello, I'm your health and wellness ally, and I'm here to help you take control of your health and health information. First I'd like to know your name and date of birth.";
+    speech.lang = 'en-US'; // Set the language
+    window.speechSynthesis.speak(speech); // Speak the text
+}
+
+
+
+
 
 window.onload = function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -89,6 +99,9 @@ window.onload = function() {
                             if (mediaRecorder && isRecording) {
                                 mediaRecorder.stop();
                                 console.log('Stopped due to silence');
+
+                                 // Instead of playing a pre-saved audio, use the voice synthesis
+                                speakQuestion(); // Call the function to speak the question
 
                                 // Show completion message
                                 const completionMessage = document.createElement('p');
