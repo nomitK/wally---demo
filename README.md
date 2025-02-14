@@ -12,19 +12,24 @@ The demo is solely focus on Wally. Wally is an AI assistant that should trigger 
 * Once triggered the web app (Wally) will do one of two options:
     * Start recording the conversation immediatly and use the information collected until the first 4 ($threshold) seconds of silence to inform the first question (along side with the current knwoledge about the users - json file: userx_kb.json) - In this scenario the first question takes into consideration (userx_kb.json + recordedconversation_stage0,complete_healhwell_record.json), where complete_healhwell_record is the ideal information that we want to collect
     * Trigger the first question when the web page opens - In this scenario the first question takes into consideration only the userx_kb.json
-
+* Regardless of the option, the demo initiates when Wally does the first question
+* The user will res
 
 
 # 3. Assets
-* Web page / mobile app - should we think of an idea of creating it a way that can be used via an API and as result be connected with several apps? In this case basically what we need to build is the IP and the tech stack - and then sell it to other apps - it changes the business model, but enable faster time to market and help with the business plan
-* userx_kb.json: the information Wally know about each user: it will inform the interaction frequency, avatar, questions, ...
-* complete_healhwell_record.json: The ideal and complete health and wellness record for the user. The gap between userx_kb and complete_healhwell_record will define the cadence of the interaction
-* health_wellness_kb.json: a certified knwoledge base that will enable notification to promote preventive healthcare and healthier lifestyles
-* the wakening_process: define the best way to trigger Wally, timely and accurately (North Star Metric: % of non-responses = # times users respond / # time Wally triggers).This should be our IP (perhaps put a patent): a smart way to proactive engage with user
+* **Web page / mobile app** - should we think of an idea of creating it a way that can be used via an API and as result be connected with several apps? In this case basically what we need to build is the IP and the tech stack - and then sell it to other apps - it changes the business model, but enable faster time to market and help with the business plan
+* **userx_kb.json**: the information Wally know about each user: it will inform the interaction frequency, avatar, questions, ...
+* **complete_healhwell_record.json**: The ideal and complete health and wellness record for the user. The gap between userx_kb and complete_healhwell_record will define the cadence of the interaction
+* **health_wellness_kb.json**: a certified knwoledge base that will enable notification to promote preventive healthcare and healthier lifestyles
+* **the wakening_process**: define the best way to trigger Wally, timely and accurately (North Star Metric: % of non-responses = # times users respond / # time Wally triggers).This should be our IP (perhaps put a patent): a smart way to proactive engage with user
 
 # 3. Problems that are not solved yet
-* Record only voices, ideally from the user, and ignore other sounds (music, noise, ...) 
-* 
+* Record only human voices, ideally from the user, and ignore other sounds (music, noise, ...)
+* Enable conversation between 2 or more users with Wally (challenge: permission to collect user information from multiple users)
+* Wally to indentify who is talking (is there a way to create an id for each user from the voice) - of so: update the knwoledge base with user_id <-> voice_id mapping, and each user must have a userx_kb.json (that in some case will be empty in the beggining) - we need to this through anonymization to avoid permision issues
+
+# 4. Technical specifications
+
 
 # 3. COSTS
 ## 3.1 APIS (Google Cloud Platform)
