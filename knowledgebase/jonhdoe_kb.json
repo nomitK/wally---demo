@@ -1,81 +1,167 @@
 {
-  "personalInformation": {
+  "personal_info": {
     "name": "John Doe",
-    "birthdate": "1981-05-14",
-    "age": 43,
-    "gender": "male",
-    "maritalstatus":"married",
-    
-    
-    
+    "phone": "+1234567890",
+    "email": "johndoe@example.com",
+    "date_of_birth": "1985-06-15",
+    "gender": "Male",
+    "marital_status": "Married",
+    "number_of_children": 2,
+    "children_ages": [5, 8],
+    "partner_age": 40,
+    "partner_gender": "Female"
   },
-  "contactInformation": {
-    "email": "rui.evora@gmail.com",
-    "phone": "+351 961234567",
-    "emergencyContact": {
-      "name": "Raquel Geraldes",
-      "relationship": "Spouse",
-      "phone": "+351 961234567"
-    }
+  "sport_activity_info": {
+    "sport": "Running",
+    "frequency_per_week": 4
   },
-  "familyDoctor": {
-    "email": "rui.evora@gmail.com",
-    "phone": "+351 961234567",
-    "emergencyContact": {
-      "name": "Raquel Geraldes",
-      "relationship": "Spouse",
-      "phone": "+351 961234567"
-    }
-  },  
-  "healthMetrics": [
+  "physical_information": {
+    "weight": {
+      "value": 80,
+      "date": "2025-02-14"
+    },
+    "height": 175,
+    "bmi": 26.1
+  },
+  "vital_signs": {
+    "weekly": [
+      {
+        "week": "2025-02-01",
+        "heart_rate": 72,
+        "blood_pressure": "120/80"
+      },
+      {
+        "week": "2025-02-08",
+        "heart_rate": 75,
+        "blood_pressure": "125/82"
+      },
+      {
+        "week": "2025-02-15",
+        "heart_rate": 70,
+        "blood_pressure": "115/78"
+      }
+    ]
+  },
+  "vaccination_record": [
     {
-      "date": "2025-02-01",
-      "bloodPressure": {
-        "systolic": 120,
-        "diastolic": 80
-      },
-      "cholesterol": {
-        "total": 190,
-        "hdl": 60,
-        "ldl": 100
-      },
-      "height": 180,
-      "weight": 75
+      "vaccine": "COVID-19",
+      "date_of_shot": "2021-03-01",
+      "next_shot": "2022-03-01"
+    },
+    {
+      "vaccine": "Flu",
+      "date_of_shot": "2022-10-10",
+      "next_shot": "2023-10-10"
     }
   ],
-  "lifestyleData": [
-    {
-      "date": "2025-02-01",
-      "exercise": [
-        {
-          "type": "Running",
-          "duration": 30, // in minutes
-          "caloriesBurned": 300
-        }
-      ],
-      "diet": [
-        {
-          "meal": "Breakfast",
-          "items": [
-            "Oatmeal",
-            "Banana",
-            "Coffee"
-          ]
-        }
-      ]
-    }
+  "dietary_restriction": [
+    "Gluten-free",
+    "Dairy-free"
   ],
-  "medicalHistory": [
+  "medical_history": [
     {
       "condition": "Hypertension",
-      "diagnosisDate": "2020-01-01",
-      "treatment": "Medication",
-      "notes": "Blood pressure under control with medication."
+      "status": "Active",
+      "date_diagnosed": "2020-05-15"
+    },
+    {
+      "condition": "Seasonal allergies",
+      "status": "Not Active",
+      "date_diagnosed": "2018-03-10"
+    },
+    {
+      "condition": "Appendectomy",
+      "status": "Not Active",
+      "date_diagnosed": "2010-07-25"
     }
   ],
-  "questionsToAsk": [
-    "What is your current weight?",
-    "Have you experienced any new symptoms?",
-    "Are there any changes to your medication?"
-  ]
+  "blood_test": [
+    {
+      "cholesterol": 190,
+      "glucose": 90,
+      "triglycerides": 150,
+      "hdl": 45,
+      "ldl": 120,
+      "date": "2025-02-14"
+    }
+  ],
+  "known_allergies": [
+    {
+      "allergy": "Penicillin",
+      "status": "Active",
+      "date_diagnosed": "2015-08-01"
+    },
+    {
+      "allergy": "Peanuts",
+      "status": "Not Active",
+      "date_diagnosed": "2012-01-10"
+    }
+  ],
+  "family_history": [
+    {
+      "relation": "Father",
+      "condition": "Heart Disease",
+      "status": "Active"
+    },
+    {
+      "relation": "Mother",
+      "condition": "Diabetes",
+      "status": "Active"
+    },
+    {
+      "relation": "Sister",
+      "condition": "Asthma",
+      "status": "Not Active"
+    }
+  ],
+  "stress_level": {
+    "weekly": [
+      {
+        "week": "2025-02-01",
+        "level": 5
+      },
+      {
+        "week": "2025-02-08",
+        "level": 7
+      },
+      {
+        "week": "2025-02-15",
+        "level": 4
+      }
+    ]
+  },
+  "sleeping_habits": {
+    "weekly": [
+      {
+        "week": "2025-02-01",
+        "rating": 8
+      },
+      {
+        "week": "2025-02-08",
+        "rating": 6
+      },
+      {
+        "week": "2025-02-15",
+        "rating": 7
+      }
+    ]
+  },
+"goals": [
+    {
+      "goal": "Exercise 3x per week",
+      "status": "Achieved"
+    },
+    {
+      "goal": "Avoid alcohol",
+      "status": "In Progress"
+    },
+    {
+      "goal": "Quit smoking",
+      "status": "Canceled"
+    },
+    {
+      "goal": "Lose 20 kgs",
+      "status": "In Progress"
+    }
+]
 }
