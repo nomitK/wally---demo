@@ -1,0 +1,42 @@
+{
+  "personal_info": {
+    "name": "",
+    "phone": "",
+    "email": "",
+    "date_of_birth": "",
+    "gender": "",
+    "marital_status": "",
+    "number_of_children": 0,
+    "children_ages": [],
+    "partner_age": 0,
+    "partner_gender": ""
+  },
+  "sport_activity_info": {
+    "sport": "",
+    "frequency_per_week": 0
+  },
+  "physical_information": {
+    "weight": {
+      "value": 0,
+      "date": ""
+    },
+    "height": 0,
+    "bmi": 0.0
+  },
+  "vital_signs": {
+    "weekly": []
+  },
+  "vaccination_record": [],
+  "dietary_restriction": [],
+  "medical_history": [],
+  "blood_test": [],
+  "known_allergies": [],
+  "family_history": [],
+  "stress_level": {
+    "weekly": []
+  },
+  "sleeping_habits": {
+    "weekly": []
+  },
+  "goals": []
+}
