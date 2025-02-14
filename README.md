@@ -43,13 +43,9 @@ The demo is solely focus on Wally. Wally is an AI assistant that should trigger 
 * app: tracker
 
 
-# 4. Pros & Cons
+## 4. Pros & Cons
 
 
-
-
-
-API Keys:
 
 
 
