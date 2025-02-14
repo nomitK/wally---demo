@@ -131,7 +131,7 @@ if (finalizeSession === false) {
   const averageVolume = sum / dataArray.length;
 
     // Check for silence
-    if (averageVolume < 1000) { // Arbitrary silence threshold
+    if (averageVolume < 10) { // Arbitrary silence threshold
         if (!silenceStart) {
             silenceStart = Date.now(); // Mark the start of silence
         } else {
