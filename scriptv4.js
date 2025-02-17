@@ -42,7 +42,8 @@
             }
         };
 
-/* async function loadJSONFile(filePath) {
+/* 
+async function loadJSONFile(filePath) {
     const response = await fetch(filePath);
     if (!response.ok) {
         throw new Error(`Erro ao carregar o arquivo JSON: ${response.statusText}`);
@@ -89,7 +90,7 @@ const prompt = "Explain how AI works";
 
 const result = await model.generateContent(prompt);
 console.log(result.response.text());
-  * /  
+    
 //    try {
 //        const jsonData = await loadJSONFile('data.json'); // Substitua pelo caminho do seu arquivo JSON
 //        const initialQuestion = await generateInitialQuestion(jsonData);
@@ -100,3 +101,4 @@ console.log(result.response.text());
 //        document.getElementById('statusMessage').innerText = 'Erro ao gerar a pergunta.';
 //    }
 };
+*/
