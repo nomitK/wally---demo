@@ -10,7 +10,7 @@ async function loadJSONFile(filePath) {
 }
 
 async function generateInitialQuestion(inputData) {
-    const apiKey = 'YOUR_GCP_API_KEY'; // Substitua pela sua chave da API
+    const apiKey = 'AIzaSyCdrUb7yvO2XHAfM1IoQWFcOthyAqKZLyg'; // Substitua pela sua chave da API
     const apiUrl = `https://YOUR_ENDPOINT_URL`; // Substitua pelo endpoint correto
 
     const requestData = {
@@ -37,13 +37,24 @@ async function generateInitialQuestion(inputData) {
 }
 
 document.getElementById('askInitialQuestion').onclick = async function() {
-    try {
-        const jsonData = await loadJSONFile('data.json'); // Substitua pelo caminho do seu arquivo JSON
-        const initialQuestion = await generateInitialQuestion(jsonData);
-        console.log('Pergunta Inicial:', initialQuestion);
-        document.getElementById('statusMessage').innerText = initialQuestion; // Exibir a pergunta na mensagem de status
-    } catch (error) {
-        console.error('Erro:', error);
-        document.getElementById('statusMessage').innerText = 'Erro ao gerar a pergunta.';
-    }
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const genAI = new GoogleGenerativeAI("YOUR_API_KEY");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const prompt = "Explain how AI works";
+
+const result = await model.generateContent(prompt);
+console.log(result.response.text());
+    
+//    try {
+//        const jsonData = await loadJSONFile('data.json'); // Substitua pelo caminho do seu arquivo JSON
+//        const initialQuestion = await generateInitialQuestion(jsonData);
+//        console.log('Pergunta Inicial:', initialQuestion);
+//        document.getElementById('statusMessage').innerText = initialQuestion; // Exibir a pergunta na mensagem de status
+//    } catch (error) {
+//        console.error('Erro:', error);
+//        document.getElementById('statusMessage').innerText = 'Erro ao gerar a pergunta.';
+//    }
 };
