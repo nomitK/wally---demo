@@ -32,7 +32,7 @@
             }
         }
 
-        document.getElementById('Fazer Pergunta Inicial').onclick = async function() {
+        document.getElementById('askInitialQuestion').onclick = async function() {
             const prompt = "Explain how AI works"; // O prompt que você quer usar
             try {
                 const result = await callGenerativeAI(prompt);
