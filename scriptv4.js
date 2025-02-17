@@ -1,0 +1,49 @@
+//Botao 1: Gerar a questao inicial com base num Json file
+
+async function loadJSONFile(filePath) {
+    const response = await fetch(filePath);
+    if (!response.ok) {
+        throw new Error(`Erro ao carregar o arquivo JSON: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+}
+
+async function generateInitialQuestion(inputData) {
+    const apiKey = 'YOUR_GCP_API_KEY'; // Substitua pela sua chave da API
+    const apiUrl = `https://YOUR_ENDPOINT_URL`; // Substitua pelo endpoint correto
+
+    const requestData = {
+        prompt: inputData.prompt, // Exemplo de prompt, ajuste conforme necessário
+        maxTokens: 50, // Quantidade máxima de tokens a serem gerados
+        temperature: 0.7 // Controle da aleatoriedade na geração
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestData)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Erro ao chamar a API: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.text; // Ajuste conforme o formato de resposta da API
+}
+
+document.getElementById('askInitialQuestion').onclick = async function() {
+    try {
+        const jsonData = await loadJSONFile('data.json'); // Substitua pelo caminho do seu arquivo JSON
+        const initialQuestion = await generateInitialQuestion(jsonData);
+        console.log('Pergunta Inicial:', initialQuestion);
+        document.getElementById('statusMessage').innerText = initialQuestion; // Exibir a pergunta na mensagem de status
+    } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('statusMessage').innerText = 'Erro ao gerar a pergunta.';
+    }
+};
