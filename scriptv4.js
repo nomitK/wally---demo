@@ -40,7 +40,7 @@ document.getElementById('askInitialQuestion').onclick = async function() {
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI("YOUR_API_KEY");
+const genAI = new GoogleGenerativeAI("AIzaSyCdrUb7yvO2XHAfM1IoQWFcOthyAqKZLyg");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const prompt = "Explain how AI works";
