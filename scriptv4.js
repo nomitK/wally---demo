@@ -11,11 +11,10 @@
             };
 
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(requestData)
                 });
