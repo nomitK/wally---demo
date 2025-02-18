@@ -10,7 +10,7 @@ async function callGenerativeAI(prompt) {
     };
 
     try {
-        const response = await fetch('http://34.42.172.165:8080/api/generate', { // Use seu IP público aqui
+        const response = await fetch('https://34.42.172.165:8080/api/generate', { // Use seu IP público aqui
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
