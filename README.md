@@ -39,6 +39,14 @@ The demo is solely focus on Wally. Wally is an AI assistant that should trigger 
 ## 3.2 Storage
 * Google Cloud
 
+
+## Server (via Google Clould Platform)
+* VM intance:instance-20250217-151156
+   * Internal IP: 10.128.0.2
+   * External: 34.42.172.165
+
+
+
 ## 3.3 Other features
 * app: tracker
 
