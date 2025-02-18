@@ -1,45 +1,44 @@
-//Botao 1: Gerar a questao inicial com base num Json file
-        async function callGenerativeAI(prompt) {
-            const apiKey = 'AIzaSyCdrUb7yvO2XHAfM1IoQWFcOthyAqKZLyg'; // Substitua pela sua chave da API
-            const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/{model=models/*}:generateContent'; // URL do endpoint da API
+async function callGenerativeAI(prompt) {
+    const apiKey = 'AIzaSyCdrUb7yvO2XHAfM1IoQWFcOthyAqKZLyg'; // Substitua pela sua chave da API
+    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // URL do endpoint da API
 
-            const requestData = {
-                model: "gemini-1.5-flash", // Nome do modelo
-                prompt: prompt,
-                maxTokens: 50,
-                temperature: 0.7,
-            };
+    const requestData = {
+        model: "gemini-1.5-flash", // Nome do modelo
+        prompt: prompt,
+        maxTokens: 50,
+        temperature: 0.7,
+    };
 
-            try {
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                });
+    try {
+        const response = await fetch('http://34.42.172.165:8080/api/generate', { // Use seu IP público aqui
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
 
-                if (!response.ok) {
-                    throw new Error(`Erro: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                return result.response.text; // Ajuste conforme o formato de resposta
-            } catch (error) {
-                console.error('Erro ao chamar a API:', error);
-                throw error; // Rethrow ou handle error como necessário
-            }
+        if (!response.ok) {
+            throw new Error(`Erro: ${response.statusText}`);
         }
 
-        document.getElementById('askInitialQuestion').onclick = async function() {
-            const prompt = "Explain how AI works"; // O prompt que você quer usar
-            try {
-                const result = await callGenerativeAI(prompt);
-                document.getElementById('result').innerText = result; // Mostra o resultado na página
-            } catch (error) {
-                document.getElementById('result').innerText = 'Erro ao gerar a resposta.';
-            }
-        };
+        const result = await response.json();
+        return result; // Ajuste conforme o formato de resposta, se necessário
+    } catch (error) {
+        console.error('Erro ao chamar a API:', error);
+        throw error; // Rethrow ou trata o erro como necessário
+    }
+}
+
+document.getElementById('askInitialQuestion').onclick = async function() {
+    const prompt = "Explain how AI works"; // O prompt que você quer usar
+    try {
+        const result = await callGenerativeAI(prompt);
+        document.getElementById('result').innerText = result; // Mostra o resultado na página
+    } catch (error) {
+        document.getElementById('result').innerText = 'Erro ao gerar a resposta.';
+    }
+};
 
 /* 
 async function loadJSONFile(filePath) {
